@@ -159,9 +159,12 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = methodDeclarationSyntax.Modifiers.Count switch {
-                            > 0 => methodDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                            _ => methodDeclarationSyntax.ReturnType.GetLeadingTrivia().ToString().AsSpan().Trim()
+                        ReadOnlySpan<char> summary = methodDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => methodDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                            _ => methodDeclarationSyntax.Modifiers.Count switch {
+                                > 0 => methodDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
+                                _ => methodDeclarationSyntax.ReturnType.GetLeadingTrivia().ToString().AsSpan().Trim()
+                            }
                         };
                         
                         if (summary.Length > 0) {
@@ -206,9 +209,12 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = propertyDeclarationSyntax.Modifiers.Count switch {
-                            > 0 => propertyDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                            _ => propertyDeclarationSyntax.Type.GetLeadingTrivia().ToString().AsSpan().Trim()
+                        ReadOnlySpan<char> summary = propertyDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => propertyDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                            _ => propertyDeclarationSyntax.Modifiers.Count switch {
+                                > 0 => propertyDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
+                                _ => propertyDeclarationSyntax.Type.GetLeadingTrivia().ToString().AsSpan().Trim()
+                            }
                         };
 
                         if (summary.Length > 0) {
@@ -266,9 +272,12 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = indexerDeclarationSyntax.Modifiers.Count switch {
-                            > 0 => indexerDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                            _ => indexerDeclarationSyntax.Type.GetLeadingTrivia().ToString().AsSpan().Trim()
+                        ReadOnlySpan<char> summary = indexerDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => indexerDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                            _ => indexerDeclarationSyntax.Modifiers.Count switch {
+                                > 0 => indexerDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
+                                _ => indexerDeclarationSyntax.Type.GetLeadingTrivia().ToString().AsSpan().Trim()
+                            }
                         };
 
                         if (summary.Length > 0) {
@@ -325,9 +334,12 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = eventFieldDeclarationSyntax.Modifiers.Count switch {
-                            > 0 => eventFieldDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                            _ => eventFieldDeclarationSyntax.EventKeyword.LeadingTrivia.ToString().AsSpan().Trim()
+                        ReadOnlySpan<char> summary = eventFieldDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => eventFieldDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                            _ => eventFieldDeclarationSyntax.Modifiers.Count switch {
+                                > 0 => eventFieldDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
+                                _ => eventFieldDeclarationSyntax.EventKeyword.LeadingTrivia.ToString().AsSpan().Trim()
+                            }
                         };
 
                         if (summary.Length > 0) {
@@ -371,9 +383,12 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = eventDeclarationSyntax.Modifiers.Count switch {
-                            > 0 => eventDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                            _ => eventDeclarationSyntax.EventKeyword.LeadingTrivia.ToString().AsSpan().Trim()
+                        ReadOnlySpan<char> summary = eventDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => eventDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                            _ => eventDeclarationSyntax.Modifiers.Count switch {
+                                > 0 => eventDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
+                                _ => eventDeclarationSyntax.EventKeyword.LeadingTrivia.ToString().AsSpan().Trim()
+                            }
                         };
 
                         if (summary.Length > 0) {

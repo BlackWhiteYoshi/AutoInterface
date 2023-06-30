@@ -184,6 +184,41 @@ public sealed class UnitTests {
     }
 
     [Fact]
+    public void Member_Method_SummaryWithAttribute() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test {
+                /// <summary>
+                /// my description
+                /// </summary>
+                [Test]
+                public int Test() => 1;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                /// <summary>
+                /// my description
+                /// </summary>
+                int Test();
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
     public void Member_Method_Async() {
         const string input = """
             using AutoInterfaceAttributes;
@@ -388,6 +423,41 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
+                public int Test => 1;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                /// <summary>
+                /// my description
+                /// </summary>
+                int Test { get; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void Member_Property_SummaryWithAttribute() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test {
+                /// <summary>
+                /// my description
+                /// </summary>
+                [Test]
                 public int Test => 1;
             }
 
@@ -771,6 +841,43 @@ public sealed class UnitTests {
     }
 
     [Fact]
+    public void Member_Indexer_SummaryWithAttribute() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class TestGet {
+                /// <summary>
+                /// my description
+                /// </summary>
+                [Test]
+                public int this[int i] {
+                  get => i;
+               }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITestGet {
+                /// <summary>
+                /// my description
+                /// </summary>
+                int this[int i] { get; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
     public void Member_Indexer_Get() {
         const string input = """
             using AutoInterfaceAttributes;
@@ -1111,6 +1218,41 @@ public sealed class UnitTests {
     }
 
     [Fact]
+    public void Member_EventField_SummaryWithAttribute() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test {
+                /// <summary>
+                /// my description
+                /// </summary>
+                [Test]
+                public event Action Test;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                /// <summary>
+                /// my description
+                /// </summary>
+                event Action Test;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
     public void Member_EventField_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
@@ -1219,6 +1361,41 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
+                public event Action Test { add { } remove { } }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                /// <summary>
+                /// my description
+                /// </summary>
+                event Action Test;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void Member_EventProperty_SummaryWithAttribute() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test {
+                /// <summary>
+                /// my description
+                /// </summary>
+                [Test]
                 public event Action Test { add { } remove { } }
             }
 
