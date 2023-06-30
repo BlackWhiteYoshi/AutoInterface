@@ -42,9 +42,11 @@ internal static class Extensions {
                     return attribute;
 
                 const string ATTRIBUTE = "Attribute";
-                ReadOnlySpan<char> identifierSpan = identifier.AsSpan();
-                if (identifierSpan[..^ATTRIBUTE.Length].SequenceEqual(attributeName.AsSpan()) && identifierSpan[attributeName.Length..].SequenceEqual(ATTRIBUTE.AsSpan()))
-                    return attribute;
+                if (identifier.Length == attributeName.Length + ATTRIBUTE.Length) {
+                    ReadOnlySpan<char> identifierSpan = identifier.AsSpan();
+                    if (identifierSpan[..^ATTRIBUTE.Length].SequenceEqual(attributeName.AsSpan()) && identifierSpan[attributeName.Length..].SequenceEqual(ATTRIBUTE.AsSpan()))
+                        return attribute;
+                }
             }
 
         return null;
