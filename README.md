@@ -57,7 +57,7 @@ AutoInterface supports:
   * [interface namespace](#namespace)
   * [interface inheritance](#inheritance)
   * [static members as static abstract](#staticmembers)
-  * [ignore specific members](#ignoreinterfaceattribute)
+  * [ignore specific members](#ignoreautointerfaceattribute)
 
 <br></br>
 ## Exmples
@@ -387,16 +387,16 @@ public interface IExample {
 
 
 <br></br>
-- ### IgnoreInterfaceAttribute
+- ### IgnoreAutoInterfaceAttribute
 
-When you want a specific member to be ignored by the generator, you can decorate it with [IgnoreInterface].
+When you want a specific member to be ignored by the generator, you can decorate it with [IgnoreAutoInterface].
 
 ```csharp
 using AutoInterfaceAttributes;
 
 [AutoInterface]
 public sealed class Example {
-    [IgnoreInterface]
+    [IgnoreAutoInterface]
     public void SomeMethod() { }
 }
 ```

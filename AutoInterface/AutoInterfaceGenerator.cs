@@ -18,7 +18,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         // register attribute marker
         context.RegisterPostInitializationOutput((IncrementalGeneratorPostInitializationContext context) => {
             context.AddSource("AutoInterfaceAttribute.g.cs", Attributes.AutoInterfaceAttribute);
-            context.AddSource("IgnoreInterfaceAttribute.g.cs", Attributes.IgnoreInterfaceAttribute);
+            context.AddSource("IgnoreAutoInterfaceAttribute.g.cs", Attributes.IgnoreAutoInterfaceAttribute);
         });
 
         // all classes/structs with AutoInterfaceAttribute
@@ -140,7 +140,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         foreach (MemberDeclarationSyntax member in provider.Type.Members) {
             switch (member) {
                 case MethodDeclarationSyntax methodDeclarationSyntax: {
-                    if (methodDeclarationSyntax.GetAttribute("IgnoreInterface") != null)
+                    if (methodDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
                         break;
 
                     // public or explicit interface specifier
@@ -187,7 +187,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case PropertyDeclarationSyntax propertyDeclarationSyntax: {
-                    if (propertyDeclarationSyntax.GetAttribute("IgnoreInterface") != null)
+                    if (propertyDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
                         break;
 
                     // public or explicit interface specifier
@@ -247,7 +247,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case IndexerDeclarationSyntax indexerDeclarationSyntax: {
-                    if (indexerDeclarationSyntax.GetAttribute("IgnoreInterface") != null)
+                    if (indexerDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
                         break;
 
                     // public or explicit interface specifier
@@ -308,7 +308,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case EventFieldDeclarationSyntax eventFieldDeclarationSyntax: {
-                    if (eventFieldDeclarationSyntax.GetAttribute("IgnoreInterface") != null)
+                    if (eventFieldDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
                         break;
 
                     if (!eventFieldDeclarationSyntax.Modifiers.Contains("public"))
@@ -352,7 +352,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case EventDeclarationSyntax eventDeclarationSyntax: {
-                    if (eventDeclarationSyntax.GetAttribute("IgnoreInterface") != null)
+                    if (eventDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
                         break;
 
                     // public or explicit interface specifier
@@ -403,6 +403,6 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append('}');
         builder.Append('\n');
 
-        context.AddSource($"{provider.Type.Identifier.ValueText}.g.cs", builder.ToString());
+        context.AddSource($"I{provider.Type.Identifier.ValueText}.g.cs", builder.ToString());
     }
 }

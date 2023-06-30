@@ -90,6 +90,7 @@ public sealed class UnitTests {
         Assert.Equal(expected, sourceText);
     }
 
+    
     #region Method
 
     [Fact]
@@ -267,7 +268,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_Method_IgnoreInterfaceAttribute() {
+    public void Member_Method_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -275,7 +276,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public int NoTest() => 0;
             }
 
@@ -313,7 +314,7 @@ public sealed class UnitTests {
 
                 int ITest.ExplicitTest() => -1;
 
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public int NoTest() => 0;
             }
 
@@ -606,7 +607,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_Property_IgnoreInterfaceAttribute() {
+    public void Member_Property_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -614,7 +615,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public int NoTest => 0;
             }
 
@@ -660,7 +661,7 @@ public sealed class UnitTests {
 
                 int ITest.ExplicitTest => -1;
 
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public int NoTest => 0;
             }
 
@@ -893,7 +894,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_Indexer_IgnoreInterfaceAttribute() {
+    public void Member_Indexer_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -901,7 +902,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class NoTest {
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public int this[int i] {
                   get { return i; }
                   set { }
@@ -964,7 +965,7 @@ public sealed class UnitTests {
 
             [AutoInterface]
             public class NoTest {
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public int this[int i] {
                   get { return i; }
                   set { }
@@ -1110,7 +1111,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_EventField_IgnoreInterfaceAttribute() {
+    public void Member_EventField_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -1118,7 +1119,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public event Action NoTest;
             }
 
@@ -1150,7 +1151,7 @@ public sealed class UnitTests {
                 /// </summary>
                 public event Action Test;
 
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public event Action NoTest;
             }
 
@@ -1269,7 +1270,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_EventProperty_IgnoreInterfaceAttribute() {
+    public void Member_EventProperty_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -1277,7 +1278,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public event Action NoTest { add { } remove { } }
             }
 
@@ -1311,7 +1312,7 @@ public sealed class UnitTests {
 
                 event Action ITest.ExplicitTest { add { } remove { } }
 
-                [IgnoreInterface]
+                [IgnoreAutoInterface]
                 public event Action NoTest { add { } remove { } }
             }
 
