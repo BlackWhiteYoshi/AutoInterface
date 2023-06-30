@@ -35,9 +35,9 @@ public static partial class Attributes {
 
         /// <summary>
         /// <para>interface inheritance: Name(s) of interfaces this interface will inherit.</para>
-        /// <para>Default is string.Empty</para>
+        /// <para>Default is Array.Empty</para>
         /// </summary>
-        public string Inheritance { get; init; }
+        public Type[] Inheritance { get; init; }
 
         /// <summary>
         /// <para>If enabled, static members get accepted and are generating "static abstract" members.</para>

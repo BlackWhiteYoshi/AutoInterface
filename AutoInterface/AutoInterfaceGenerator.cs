@@ -57,22 +57,42 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
 
     private void Execute(SourceProductionContext context, AttributeWithClass provider) {
-        (string name, string modifier, string namspace, string inheritance, bool staticMembers) attribute;
+        (string name, string modifier, string namspace, string[] inheritance, bool staticMembers) attribute;
         if (provider.Attribute.ArgumentList != null) {
             attribute.name = provider.Attribute.ArgumentList.GetLiteral("Name")?.Token.ValueText ?? $"I{provider.Type.Identifier.ValueText}";
             attribute.modifier = provider.Attribute.ArgumentList.GetLiteral("Modifier")?.Token.ValueText ?? "public";
             attribute.namspace = provider.Attribute.ArgumentList.GetLiteral("Namespace")?.Token.ValueText ?? provider.Type.GetParent<BaseNamespaceDeclarationSyntax>()?.Name.ToString() ?? string.Empty;
-            attribute.inheritance = provider.Attribute.ArgumentList.GetLiteral("Inheritance")?.Token.ValueText ?? string.Empty;
+            
+            {
+                attribute.inheritance = provider.Attribute.ArgumentList.GetExpression("Inheritance") switch {
+                    ImplicitArrayCreationExpressionSyntax arrayExpression => ExpressionsToStringArray(arrayExpression.Initializer),
+                    ArrayCreationExpressionSyntax arrayExpression => arrayExpression.Initializer switch {
+                        InitializerExpressionSyntax initializerExpression => ExpressionsToStringArray(initializerExpression),
+                        _ => Array.Empty<string>()
+                    },
+                    _ => Array.Empty<string>()
+                };
+
+                static string[] ExpressionsToStringArray(InitializerExpressionSyntax initializerExpression) {
+                    string[] result = new string[initializerExpression.Expressions.Count];
+
+                    for (int i = 0; i < initializerExpression.Expressions.Count; i++)
+                        if (initializerExpression.Expressions[i] is TypeOfExpressionSyntax typeOfExpression)
+                            result[i] = typeOfExpression.Type.ToString();
+                    
+                    return result;
+                }
+            }
+            
             attribute.staticMembers = provider.Attribute.ArgumentList.GetLiteral("StaticMembers")?.Token.Value as bool? ?? false;
         }
         else {
             attribute.name = $"I{provider.Type.Identifier.ValueText}";
             attribute.modifier = "public";
             attribute.namspace = provider.Type.GetParent<BaseNamespaceDeclarationSyntax>()?.Name.ToString() ?? string.Empty;
-            attribute.inheritance = string.Empty;
+            attribute.inheritance = Array.Empty<string>();
             attribute.staticMembers = false;
         }
-
 
 
         StringBuilder builder = new(65536);
@@ -127,11 +147,16 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
             builder.Length -= 2;
             builder.Append('>');
         }
-        if (attribute.inheritance != string.Empty) {
+        if (attribute.inheritance.Length > 0) {
             builder.Append(' ');
             builder.Append(':');
             builder.Append(' ');
-            builder.Append(attribute.inheritance);
+            builder.Append(attribute.inheritance[0]);
+            for (int i = 1; i < attribute.inheritance.Length; i++) {
+                builder.Append(',');
+                builder.Append(' ');
+                builder.Append(attribute.inheritance[i]);
+            }
         }
         builder.Append(' ');
         builder.Append('{');

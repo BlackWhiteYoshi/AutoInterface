@@ -1628,16 +1628,18 @@ public sealed class UnitTests {
 
 
     [Theory]
-    [InlineData("MyClass")]
-    [InlineData("IList")]
-    [InlineData("MyClass, IList")]
-    public void Attribute_Inheritance(string inheritance) {
+    [InlineData("new Type[] { }", "")]
+    [InlineData("new[] { typeof(ICore) }", ": ICore ")]
+    [InlineData("new Type[] { typeof(ICore) }", ": ICore ")]
+    [InlineData("new[] { typeof(A), typeof(B), typeof(C) }", ": A, B, C ")]
+    [InlineData("new Type[] { typeof(A), typeof(B), typeof(C) }", ": A, B, C ")]
+    public void Attribute_Inheritance(string inheritance, string result) {
         string input = $$"""
             using AutoInterfaceAttributes;
             
             namespace MyCode;
             
-            [AutoInterface(Inheritance = "{{inheritance}}")]
+            [AutoInterface(Inheritance = {{inheritance}})]
             public class Test { }
 
             """;
@@ -1648,7 +1650,7 @@ public sealed class UnitTests {
 
             namespace MyCode;
 
-            public interface ITest : {{inheritance}} {}
+            public interface ITest {{result}}{}
 
             """;
         Assert.Equal(expected, sourceText);

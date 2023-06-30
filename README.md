@@ -327,15 +327,15 @@ public interface IExample {}
 <br></br>
 - ### Inheritance
 
-Type: string  
-Default: ""
+Type: Type[]  
+Default: Array.Empty\<Type\>()
 
 If the generated interface should inherit from one or more other interfaces, you can list them here.
 
 ```csharp
 using AutoInterfaceAttributes;
 
-[AutoInterface(Inheritance = "ICore")]
+[AutoInterface(Inheritance = new[] { typeof(ICore) })]
 public sealed class Example { }
 
 public interface ICore { ... }

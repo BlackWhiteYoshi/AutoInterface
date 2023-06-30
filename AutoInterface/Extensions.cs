@@ -66,6 +66,23 @@ internal static class Extensions {
         return false;
     }
 
+
+    /// <summary>
+    /// <para>Finds the argument with the given name and returns it's expression.</para>
+    /// <para>If not found, it returns null.</para>
+    /// </summary>
+    /// <param name="argumentList"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    internal static ExpressionSyntax? GetExpression(this AttributeArgumentListSyntax argumentList, string name) {
+        foreach (AttributeArgumentSyntax argument in argumentList.Arguments) {
+            if (argument.NameEquals?.Name.Identifier.ValueText == name)
+                return argument.Expression;
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// <para>Finds the argument with the given name and returns it's expression as LiteralExpressionSyntax.</para>
     /// <para>If not found or expression is not a LiteralExpressionSyntax, it returns null.</para>
@@ -73,14 +90,7 @@ internal static class Extensions {
     /// <param name="argumentList"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    internal static LiteralExpressionSyntax? GetLiteral(this AttributeArgumentListSyntax argumentList, string name) {
-        foreach (AttributeArgumentSyntax argument in argumentList.Arguments) {
-            if (argument.NameEquals?.Name.Identifier.ValueText == name)
-                return argument.Expression as LiteralExpressionSyntax;
-        }
-
-        return null;
-    }
+    internal static LiteralExpressionSyntax? GetLiteral(this AttributeArgumentListSyntax argumentList, string name) => argumentList.GetExpression(name) as LiteralExpressionSyntax;
 
 
     /// <summary>
