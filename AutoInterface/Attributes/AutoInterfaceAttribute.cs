@@ -12,7 +12,7 @@ public static partial class Attributes {
     /// <summary>
     /// Generates an interface for the decorated class/struct.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
     internal sealed class AutoInterfaceAttribute : Attribute {
         /// <summary>
         /// <para>The name of the generated interface.</para>

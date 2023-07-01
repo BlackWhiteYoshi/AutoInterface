@@ -443,6 +443,10 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append('}');
         builder.Append('\n');
 
-        context.AddSource($"I{provider.Type.Identifier.ValueText}.g.cs", builder.ToString());
+
+        string interfaceName = attribute.name;
+        string className = provider.Type.Identifier.ValueText;
+        string fileName = Path.GetFileName(provider.Type.SyntaxTree.FilePath);
+        context.AddSource($"{interfaceName}_{className}_{fileName}.g.cs", builder.ToString());
     }
 }
