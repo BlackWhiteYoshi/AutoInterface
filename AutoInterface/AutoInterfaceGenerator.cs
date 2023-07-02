@@ -125,11 +125,13 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
         // summary
         {
-            ReadOnlySpan<char> summary = provider.Type.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim();
-            if (summary.Length > 0) {
-                builder.Append(summary);
-                builder.Append('\n');
-            }
+            SyntaxTriviaList triviaList = provider.Type.AttributeLists[0].GetLeadingTrivia();
+            foreach (SyntaxTrivia trivia in triviaList)
+                if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
+                    builder.Append("///");
+                    builder.Append(documentationCommentTrivia.ToString());
+                    break;
+                }
         }
         // class/struct declaration
         builder.Append(attribute.modifier);
@@ -184,19 +186,19 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = methodDeclarationSyntax.AttributeLists.Count switch {
-                            > 0 => methodDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                        SyntaxTriviaList triviaList = methodDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => methodDeclarationSyntax.AttributeLists[0].GetLeadingTrivia(),
                             _ => methodDeclarationSyntax.Modifiers.Count switch {
-                                > 0 => methodDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                                _ => methodDeclarationSyntax.ReturnType.GetLeadingTrivia().ToString().AsSpan().Trim()
+                                > 0 => methodDeclarationSyntax.Modifiers[0].LeadingTrivia,
+                                _ => methodDeclarationSyntax.ReturnType.GetLeadingTrivia()
                             }
                         };
-                        
-                        if (summary.Length > 0) {
-                            builder.Append("    ");
-                            builder.Append(summary);
-                            builder.Append('\n');
-                        }
+                        foreach (SyntaxTrivia trivia in triviaList)
+                            if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
+                                builder.Append("    ///");
+                                builder.Append(documentationCommentTrivia.ToString());
+                                break;
+                            }
                     }
 
                     builder.Append("    ");
@@ -234,19 +236,19 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = propertyDeclarationSyntax.AttributeLists.Count switch {
-                            > 0 => propertyDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                        SyntaxTriviaList triviaList = propertyDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => propertyDeclarationSyntax.AttributeLists[0].GetLeadingTrivia(),
                             _ => propertyDeclarationSyntax.Modifiers.Count switch {
-                                > 0 => propertyDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                                _ => propertyDeclarationSyntax.Type.GetLeadingTrivia().ToString().AsSpan().Trim()
+                                > 0 => propertyDeclarationSyntax.Modifiers[0].LeadingTrivia,
+                                _ => propertyDeclarationSyntax.Type.GetLeadingTrivia()
                             }
                         };
-
-                        if (summary.Length > 0) {
-                            builder.Append("    ");
-                            builder.Append(summary);
-                            builder.Append('\n');
-                        }
+                        foreach (SyntaxTrivia trivia in triviaList)
+                            if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
+                                builder.Append("    ///");
+                                builder.Append(documentationCommentTrivia.ToString());
+                                break;
+                            }
                     }
 
                     builder.Append("    ");
@@ -297,19 +299,19 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = indexerDeclarationSyntax.AttributeLists.Count switch {
-                            > 0 => indexerDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                        SyntaxTriviaList triviaList = indexerDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => indexerDeclarationSyntax.AttributeLists[0].GetLeadingTrivia(),
                             _ => indexerDeclarationSyntax.Modifiers.Count switch {
-                                > 0 => indexerDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                                _ => indexerDeclarationSyntax.Type.GetLeadingTrivia().ToString().AsSpan().Trim()
+                                > 0 => indexerDeclarationSyntax.Modifiers[0].LeadingTrivia,
+                                _ => indexerDeclarationSyntax.Type.GetLeadingTrivia()
                             }
                         };
-
-                        if (summary.Length > 0) {
-                            builder.Append("    ");
-                            builder.Append(summary);
-                            builder.Append('\n');
-                        }
+                        foreach (SyntaxTrivia trivia in triviaList)
+                            if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
+                                builder.Append("    ///");
+                                builder.Append(documentationCommentTrivia.ToString());
+                                break;
+                            }
                     }
 
                     builder.Append("    ");
@@ -359,19 +361,19 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = eventFieldDeclarationSyntax.AttributeLists.Count switch {
-                            > 0 => eventFieldDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                        SyntaxTriviaList triviaList = eventFieldDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => eventFieldDeclarationSyntax.AttributeLists[0].GetLeadingTrivia(),
                             _ => eventFieldDeclarationSyntax.Modifiers.Count switch {
-                                > 0 => eventFieldDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                                _ => eventFieldDeclarationSyntax.EventKeyword.LeadingTrivia.ToString().AsSpan().Trim()
+                                > 0 => eventFieldDeclarationSyntax.Modifiers[0].LeadingTrivia,
+                                _ => eventFieldDeclarationSyntax.EventKeyword.LeadingTrivia
                             }
                         };
-
-                        if (summary.Length > 0) {
-                            builder.Append("    ");
-                            builder.Append(summary);
-                            builder.Append('\n');
-                        }
+                        foreach (SyntaxTrivia trivia in triviaList)
+                            if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
+                                builder.Append("    ///");
+                                builder.Append(documentationCommentTrivia.ToString());
+                                break;
+                            }
                     }
 
                     builder.Append("    ");
@@ -408,19 +410,19 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // summary
                     {
-                        ReadOnlySpan<char> summary = eventDeclarationSyntax.AttributeLists.Count switch {
-                            > 0 => eventDeclarationSyntax.AttributeLists[0].GetLeadingTrivia().ToString().AsSpan().Trim(),
+                        SyntaxTriviaList triviaList = eventDeclarationSyntax.AttributeLists.Count switch {
+                            > 0 => eventDeclarationSyntax.AttributeLists[0].GetLeadingTrivia(),
                             _ => eventDeclarationSyntax.Modifiers.Count switch {
-                                > 0 => eventDeclarationSyntax.Modifiers[0].LeadingTrivia.ToString().AsSpan().Trim(),
-                                _ => eventDeclarationSyntax.EventKeyword.LeadingTrivia.ToString().AsSpan().Trim()
+                                > 0 => eventDeclarationSyntax.Modifiers[0].LeadingTrivia,
+                                _ => eventDeclarationSyntax.EventKeyword.LeadingTrivia
                             }
                         };
-
-                        if (summary.Length > 0) {
-                            builder.Append("    ");
-                            builder.Append(summary);
-                            builder.Append('\n');
-                        }
+                        foreach (SyntaxTrivia trivia in triviaList)
+                            if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
+                                builder.Append("    ///");
+                                builder.Append(documentationCommentTrivia.ToString());
+                                break;
+                            }
                     }
 
                     builder.Append("    ");

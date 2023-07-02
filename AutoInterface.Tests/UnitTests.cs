@@ -60,37 +60,7 @@ public sealed class UnitTests {
         Assert.Equal(expected, sourceText);
     }
 
-    [Fact]
-    public void Summary() {
-        const string input = """
-            using AutoInterfaceAttributes;
-            
-            namespace MyCode;
-            
-            /// <summary>
-            /// my description
-            /// </summary>
-            [AutoInterface]
-            public class Test { }
 
-            """;
-        string sourceText = GenerateSourceText(input, out _, out _).Last();
-
-        const string expected = $$"""
-            {{GENERATED_SOURCE_HEAD}}
-
-            namespace MyCode;
-
-            /// <summary>
-            /// my description
-            /// </summary>
-            public interface ITest {}
-
-            """;
-        Assert.Equal(expected, sourceText);
-    }
-
-    
     #region Method
 
     [Fact]
@@ -1679,6 +1649,139 @@ public sealed class UnitTests {
 
             public interface ITest {
                 static abstract int GetNumber();
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    #endregion
+
+
+    #region summary
+
+    [Fact]
+    public void Summary() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            /// <summary>
+            /// my description
+            /// </summary>
+            [AutoInterface]
+            public class Test { }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            /// <summary>
+            /// my description
+            /// </summary>
+            public interface ITest {}
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void Summary_Method() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test {
+                /// <summary>
+                /// my description
+                /// </summary>
+                /// <param name="parameter1"></param>
+                /// <param name="parameter2"></param>
+                /// <returns></returns>
+                /// <remarks></remarks>
+                /// <exception cref=""></exception>
+                public int SomeMethod(int parameter1, string parameter2) => 1;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                /// <summary>
+                /// my description
+                /// </summary>
+                /// <param name="parameter1"></param>
+                /// <param name="parameter2"></param>
+                /// <returns></returns>
+                /// <remarks></remarks>
+                /// <exception cref=""></exception>
+                int SomeMethod(int parameter1, string parameter2);
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void Summary_PreProcessorDirective() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test {
+                #region
+                public void SomeMethod() { }
+                #endregion
+
+                #region
+                public int SomeProperty { get; init; }
+                #endregion
+                
+                #region
+                public int this[int i] => i;
+                #endregion
+                
+                #region
+                public event Action? someEvent;
+                #endregion
+                
+                #region
+                public event Action SomeEvent { add { } remove { } }
+                #endregion
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _).Last();
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                void SomeMethod();
+
+                int SomeProperty { get; init; }
+
+                int this[int i] { get; }
+
+                event Action? someEvent;
+
+                event Action SomeEvent;
             }
 
             """;
