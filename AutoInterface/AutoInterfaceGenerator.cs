@@ -106,10 +106,21 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
             """);
 
         // usingStatements
+        {
+            BaseNamespaceDeclarationSyntax? namspace = provider.Type.GetParent<BaseNamespaceDeclarationSyntax>();
+            while (namspace != null) {
+                string usings = namspace.Usings.ToString();
+                if (usings != string.Empty) {
+                    builder.Append(usings);
+                    builder.Append('\n');
+                }
+                namspace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
+            }
+            
         CompilationUnitSyntax? compilationUnit = provider.Type.GetParent<CompilationUnitSyntax>();
-        string usingStatements = compilationUnit?.Usings.ToString() ?? string.Empty;
-        if (usingStatements != string.Empty) {
-            builder.Append(usingStatements);
+            if (compilationUnit != null)
+                builder.Append(compilationUnit.Usings.ToString());
+
             builder.Append('\n');
             builder.Append('\n');
         }
