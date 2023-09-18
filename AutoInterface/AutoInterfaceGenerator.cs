@@ -1,7 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
-
 namespace AutoInterface;
 
 [Generator(LanguageNames.CSharp)]
@@ -58,40 +57,92 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
     private static void Execute(SourceProductionContext context, AttributeWithClass provider) {
         (string name, string modifier, string namspace, string[] inheritance, bool staticMembers) attribute;
-        if (provider.Attribute.ArgumentList != null) {
-            attribute.name = provider.Attribute.ArgumentList.GetLiteral("Name")?.Token.ValueText ?? $"I{provider.Type.Identifier.ValueText}";
-            attribute.modifier = provider.Attribute.ArgumentList.GetLiteral("Modifier")?.Token.ValueText ?? "public";
-            attribute.namspace = provider.Attribute.ArgumentList.GetLiteral("Namespace")?.Token.ValueText ?? provider.Type.GetParent<BaseNamespaceDeclarationSyntax>()?.Name.ToString() ?? string.Empty;
-            
-            {
-                attribute.inheritance = provider.Attribute.ArgumentList.GetExpression("Inheritance") switch {
-                    ImplicitArrayCreationExpressionSyntax arrayExpression => ExpressionsToStringArray(arrayExpression.Initializer),
-                    ArrayCreationExpressionSyntax arrayExpression => arrayExpression.Initializer switch {
-                        InitializerExpressionSyntax initializerExpression => ExpressionsToStringArray(initializerExpression),
-                        _ => Array.Empty<string>()
-                    },
-                    _ => Array.Empty<string>()
-                };
+        {
+            if (provider.Attribute.ArgumentList != null) {
+                // Name
+                if (provider.Attribute.ArgumentList.GetLiteral("Name") is LiteralExpressionSyntax nameLiteral)
+                    attribute.name = nameLiteral.Token.ValueText;
+                else
+                    attribute.name = DefaultName(provider);
 
-                static string[] ExpressionsToStringArray(InitializerExpressionSyntax initializerExpression) {
-                    string[] result = new string[initializerExpression.Expressions.Count];
+                // Modifier
+                if (provider.Attribute.ArgumentList.GetLiteral("Modifier") is LiteralExpressionSyntax modifierLiteral)
+                    attribute.modifier = modifierLiteral.Token.ValueText;
+                else
+                    attribute.modifier = DefaultModifier();
 
-                    for (int i = 0; i < initializerExpression.Expressions.Count; i++)
-                        if (initializerExpression.Expressions[i] is TypeOfExpressionSyntax typeOfExpression)
-                            result[i] = typeOfExpression.Type.ToString();
+                // Namespace
+                if (provider.Attribute.ArgumentList.GetLiteral("Namespace") is LiteralExpressionSyntax namespaceLiteral)
+                    attribute.namspace = namespaceLiteral.Token.ValueText;
+                else
+                    attribute.namspace = DefaultNamespace(provider);
+
+                // Inheritance
+                {
+                    attribute.inheritance = provider.Attribute.ArgumentList.GetExpression("Inheritance") switch {
+                        ImplicitArrayCreationExpressionSyntax arrayExpression => ExpressionsToStringArray(arrayExpression.Initializer),
+                        ArrayCreationExpressionSyntax { Initializer: InitializerExpressionSyntax initializerExpression } => ExpressionsToStringArray(initializerExpression),
+                        _ => DefaultInheritance()
+                    };
+
+                    static string[] ExpressionsToStringArray(InitializerExpressionSyntax initializerExpression) {
+                        string[] result = new string[initializerExpression.Expressions.Count];
+
+                        for (int i = 0; i < initializerExpression.Expressions.Count; i++)
+                            if (initializerExpression.Expressions[i] is TypeOfExpressionSyntax typeOfExpression)
+                                result[i] = typeOfExpression.Type.ToString();
                     
-                    return result;
+                        return result;
+                    }
+                }
+
+                // StaticMembers
+                if (provider.Attribute.ArgumentList.GetLiteral("StaticMembers") is LiteralExpressionSyntax staticMembersLiteral)
+                    attribute.staticMembers = staticMembersLiteral.Token.Value as bool? ?? DefaultStaticMembers();
+                else
+                    attribute.staticMembers = DefaultStaticMembers();
+            }
+            else {
+                attribute.name = DefaultName(provider);
+                attribute.modifier = DefaultModifier();
+                attribute.namspace = DefaultNamespace(provider);
+                attribute.inheritance = DefaultInheritance();
+                attribute.staticMembers = DefaultStaticMembers();
+            }
+
+
+            static string DefaultName(AttributeWithClass provider) => $"I{provider.Type.Identifier.ValueText}";
+            
+            static string DefaultModifier() => "public";
+            
+            static string DefaultNamespace(AttributeWithClass provider) {
+                BaseNamespaceDeclarationSyntax? namspace = provider.Type.GetParent<BaseNamespaceDeclarationSyntax>();
+                if (namspace == null)
+                    return string.Empty;
+                
+                BaseNamespaceDeclarationSyntax? parentNamespace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
+                if (parentNamespace == null)
+                    return namspace.Name.ToString();
+
+
+                StringBuilder namespaceBuilder = new();
+                AppendNamespace(parentNamespace, namespaceBuilder);
+                namespaceBuilder.Append(namspace.Name.ToString());
+                return namespaceBuilder.ToString();
+
+                static void AppendNamespace(BaseNamespaceDeclarationSyntax namspace, StringBuilder namespaceBuilder) {
+                    BaseNamespaceDeclarationSyntax? parentNamespace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
+                    if (parentNamespace != null)
+                        AppendNamespace(parentNamespace, namespaceBuilder);
+
+                    namespaceBuilder.Append(namspace.Name.ToString());
+                    namespaceBuilder.Append('.');
                 }
             }
-            
-            attribute.staticMembers = provider.Attribute.ArgumentList.GetLiteral("StaticMembers")?.Token.Value as bool? ?? false;
-        }
-        else {
-            attribute.name = $"I{provider.Type.Identifier.ValueText}";
-            attribute.modifier = "public";
-            attribute.namspace = provider.Type.GetParent<BaseNamespaceDeclarationSyntax>()?.Name.ToString() ?? string.Empty;
-            attribute.inheritance = Array.Empty<string>();
-            attribute.staticMembers = false;
+
+            static string[] DefaultInheritance() => Array.Empty<string>();
+
+            static bool DefaultStaticMembers() => false;
         }
 
 
@@ -117,7 +168,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 namspace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
             }
             
-        CompilationUnitSyntax? compilationUnit = provider.Type.GetParent<CompilationUnitSyntax>();
+            CompilationUnitSyntax? compilationUnit = provider.Type.GetParent<CompilationUnitSyntax>();
             if (compilationUnit != null)
                 builder.Append(compilationUnit.Usings.ToString());
 
@@ -455,7 +506,6 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Length--;
         builder.Append('}');
         builder.Append('\n');
-
 
         string interfaceName = attribute.name;
         string sourceCode = builder.ToString();
