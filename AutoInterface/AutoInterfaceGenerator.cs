@@ -508,12 +508,8 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append('\n');
 
         string interfaceName = attribute.name;
-        string sourceCode = builder.ToString();
-        string hash = Convert.ToBase64String(BitConverter.GetBytes(sourceCode.GetHashCode()))
-            .TrimEnd('=')
-            .Replace('+', '-')
-            .Replace('/', '_');
-
-        context.AddSource($"{interfaceName}.{hash}.g.cs", sourceCode);
+        string className = provider.Type.Identifier.ValueText;
+        string fileName = Path.GetFileName(provider.Type.SyntaxTree.FilePath);
+        context.AddSource($"{interfaceName}_{className}_{fileName}.g.cs", builder.ToString());
     }
 }
