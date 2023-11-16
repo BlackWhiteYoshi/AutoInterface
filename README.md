@@ -386,7 +386,7 @@ If the generated interface should inherit from one or more other interfaces, you
 ```csharp
 using AutoInterfaceAttributes;
 
-[AutoInterface(Inheritance = new[] { typeof(ICore) })]
+[AutoInterface(Inheritance = [typeof(ICore)])]
 public sealed class Example { }
 
 public interface ICore { ... }

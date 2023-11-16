@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text;
+
 namespace AutoInterface;
 
 [Generator(LanguageNames.CSharp)]
@@ -80,6 +81,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 // Inheritance
                 {
                     attribute.inheritance = provider.Attribute.ArgumentList.GetExpression("Inheritance") switch {
+                        CollectionExpressionSyntax collectionExpression => ExpressionElementsToStringArray(collectionExpression),
                         ImplicitArrayCreationExpressionSyntax arrayExpression => ExpressionsToStringArray(arrayExpression.Initializer),
                         ArrayCreationExpressionSyntax { Initializer: InitializerExpressionSyntax initializerExpression } => ExpressionsToStringArray(initializerExpression),
                         _ => DefaultInheritance()
@@ -92,6 +94,16 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                             if (initializerExpression.Expressions[i] is TypeOfExpressionSyntax typeOfExpression)
                                 result[i] = typeOfExpression.Type.ToString();
                     
+                        return result;
+                    }
+
+                    static string[] ExpressionElementsToStringArray(CollectionExpressionSyntax collectionExpression) {
+                        string[] result = new string[collectionExpression.Elements.Count];
+
+                        for (int i = 0; i < collectionExpression.Elements.Count; i++)
+                            if (collectionExpression.Elements[i] is ExpressionElementSyntax expression && expression.Expression is TypeOfExpressionSyntax typeOfExpression)
+                                result[i] = typeOfExpression.Type.ToString();
+
                         return result;
                     }
                 }

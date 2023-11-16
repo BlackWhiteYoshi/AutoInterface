@@ -1663,11 +1663,15 @@ public sealed class UnitTests {
 
 
     [Theory]
+    [InlineData("new[] { }", "")]
     [InlineData("new Type[] { }", "")]
+    [InlineData("[]", "")]
     [InlineData("new[] { typeof(ICore) }", ": ICore ")]
     [InlineData("new Type[] { typeof(ICore) }", ": ICore ")]
+    [InlineData("[typeof(ICore)]", ": ICore ")]
     [InlineData("new[] { typeof(A), typeof(B), typeof(C) }", ": A, B, C ")]
     [InlineData("new Type[] { typeof(A), typeof(B), typeof(C) }", ": A, B, C ")]
+    [InlineData("[typeof(A), typeof(B), typeof(C)]", ": A, B, C ")]
     public void Attribute_Inheritance(string inheritance, string result) {
         string input = $$"""
             using AutoInterfaceAttributes;
