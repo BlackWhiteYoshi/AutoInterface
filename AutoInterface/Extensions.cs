@@ -1,6 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis;
-using System.Text;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AutoInterface;
 
@@ -91,15 +90,4 @@ internal static class Extensions {
     /// <param name="name"></param>
     /// <returns></returns>
     internal static LiteralExpressionSyntax? GetLiteral(this AttributeArgumentListSyntax argumentList, string name) => argumentList.GetExpression(name) as LiteralExpressionSyntax;
-
-
-    /// <summary>
-    /// Append <see cref="Span{T}">Span</see> of <see cref="char"/>.
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="str"></param>
-    internal static void Append(this StringBuilder builder, ReadOnlySpan<char> str) {
-        foreach (char c in str)
-            builder.Append(c);
-    }
 }

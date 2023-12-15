@@ -181,10 +181,11 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
             }
             
             CompilationUnitSyntax? compilationUnit = provider.Type.GetParent<CompilationUnitSyntax>();
-            if (compilationUnit != null)
+            if (compilationUnit != null) {
                 builder.Append(compilationUnit.Usings.ToString());
+                builder.Append('\n');
+            }
 
-            builder.Append('\n');
             builder.Append('\n');
         }
 

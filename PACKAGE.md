@@ -49,6 +49,7 @@ AutoInterface supports:
 - classes and structs
 - all members (Method, Property, Indexer, Event)
 - also explicit Interface members
+- multiple attributes on same class
 - summary of class/struct and members
 - generic
 - parameters for

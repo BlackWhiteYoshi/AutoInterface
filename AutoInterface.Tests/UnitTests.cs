@@ -26,7 +26,7 @@ public sealed class UnitTests {
         return generatorResult.GeneratedSources.Select((GeneratedSourceResult generatedSource) => generatedSource.SourceText.ToString()).ToArray();
 
 
-        static Compilation CreateCompilation(string source) {
+        static CSharpCompilation CreateCompilation(string source) {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
             PortableExecutableReference metadataReference = MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location);
             CSharpCompilationOptions compilationOptions = new(OutputKind.ConsoleApplication);
