@@ -15,7 +15,7 @@ public static partial class Attributes {
         /// The decorated member will be Ignored by the generator.
         /// </summary>
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Event)]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{NAME}}", "{{VERSION}}")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{AutoInterfaceGenerator.ASSEMBLY_NAME}}", "{{AutoInterfaceGenerator.ASSEMBLY_VERSION}}")]
         internal sealed class IgnoreAutoInterfaceAttribute : Attribute { }
 
         """;
