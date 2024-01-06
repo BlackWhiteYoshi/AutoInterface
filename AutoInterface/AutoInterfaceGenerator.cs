@@ -7,7 +7,7 @@ namespace AutoInterface;
 [Generator(LanguageNames.CSharp)]
 public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
     public const string ASSEMBLY_NAME = "AutoInterface";
-    public const string ASSEMBLY_VERSION = "1.2.4";
+    public const string ASSEMBLY_VERSION = "1.2.5";
 
     /// <summary>
     /// Container for 2 Nodes: The attribute AutoInterfaceAttribute together with the corresponding class/struct.
