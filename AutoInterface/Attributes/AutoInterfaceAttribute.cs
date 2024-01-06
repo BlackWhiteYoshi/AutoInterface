@@ -15,7 +15,7 @@ public static partial class Attributes {
         /// Generates an interface for the decorated class/struct.
         /// </summary>
         [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{AutoInterfaceGenerator.ASSEMBLY_NAME}}", "{{AutoInterfaceGenerator.ASSEMBLY_VERSION}}")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{NAME}}", "{{VERSION}}")]
         internal sealed class AutoInterfaceAttribute : Attribute {
             /// <summary>
             /// <para>The name of the generated interface.</para>

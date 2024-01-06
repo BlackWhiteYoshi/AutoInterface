@@ -6,9 +6,6 @@ namespace AutoInterface;
 
 [Generator(LanguageNames.CSharp)]
 public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
-    public const string ASSEMBLY_NAME = "AutoInterface";
-    public const string ASSEMBLY_VERSION = "1.2.5";
-
     /// <summary>
     /// Container for 2 Nodes: The attribute AutoInterfaceAttribute together with the corresponding class/struct.
     /// </summary>
@@ -212,7 +209,6 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
         }
         // class/struct declaration
-        builder.Append($"[System.CodeDom.Compiler.GeneratedCodeAttribute(\"{AutoInterfaceGenerator.ASSEMBLY_NAME}\", \"{AutoInterfaceGenerator.ASSEMBLY_VERSION}\")]\n");
         builder.Append(attribute.modifier);
         builder.Append(" interface ");
         builder.Append(attribute.name);
