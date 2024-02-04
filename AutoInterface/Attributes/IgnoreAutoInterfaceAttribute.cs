@@ -7,6 +7,8 @@ public static partial class Attributes {
         #nullable enable annotations
 
 
+        #if !AUTOINTERFACE_EXCLUDE_ATTRIBUTES
+        
         using System;
     
         namespace AutoInterfaceAttributes;
@@ -17,6 +19,8 @@ public static partial class Attributes {
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Event)]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("{{NAME}}", "{{VERSION}}")]
         internal sealed class IgnoreAutoInterfaceAttribute : Attribute { }
+
+        #endif
 
         """;
 }

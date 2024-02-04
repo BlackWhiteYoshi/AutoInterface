@@ -7,6 +7,8 @@ public static partial class Attributes {
         #nullable enable annotations
 
 
+        #if !AUTOINTERFACE_EXCLUDE_ATTRIBUTES
+        
         using System;
     
         namespace AutoInterfaceAttributes;
@@ -48,6 +50,8 @@ public static partial class Attributes {
             /// </summary>
             public bool StaticMembers { get; init; }
         }
+
+        #endif
 
         """;
 }
