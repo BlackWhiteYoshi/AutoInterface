@@ -2013,6 +2013,238 @@ public sealed class UnitTests {
     #endregion
 
 
+    #region struct and record
+
+    [Fact]
+    public void Struct() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public struct Test {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void Record() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record Test {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordClass() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record class Test {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordClassParameterList() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record class Test(string Name) {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                string Name { get; }
+
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordClassEmptyParameterList() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record class Test() {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordStruct() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record struct Test {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordStructParameterList() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record struct Test(string Name) {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                string Name { get; set; }
+
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordStructEmptyParameterList() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record struct Test() {
+                public int Number { get; init; }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Number { get; init; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    #endregion
+
 
     #region miscellaneous
 

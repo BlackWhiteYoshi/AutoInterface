@@ -37,7 +37,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         if (syntaxNode is not AttributeSyntax attributeSyntax)
             return false;
 
-        if (attributeSyntax.Parent?.Parent is not (ClassDeclarationSyntax or StructDeclarationSyntax))
+        if (attributeSyntax.Parent?.Parent is not (ClassDeclarationSyntax or RecordDeclarationSyntax or StructDeclarationSyntax))
             return false;
 
 
@@ -244,6 +244,28 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append(' ');
         builder.Append('{');
         builder.Append('\n');
+
+        // record parameterlist
+        if (provider.Type is RecordDeclarationSyntax record) {
+            if (record.ParameterList != null) {
+                string getterSetter = record.ClassOrStructKeyword.ValueText switch {
+                    "class" => " { get; }\n\n",
+                    "struct" => " { get; set; }\n\n",
+                    _ => throw new Exception($"ClassOrStructKeyword contains other value than 'class' or 'struct': {record.ClassOrStructKeyword.ValueText}")
+                };
+
+                foreach (ParameterSyntax parameter in record.ParameterList.Parameters) {
+                    if (parameter.Type == null)
+                        continue;
+
+                    builder.Append("    ");
+                    builder.Append(parameter.Type.ToString());
+                    builder.Append(' ');
+                    builder.Append(parameter.Identifier.ValueText);
+                    builder.Append(getterSetter);
+                }
+            }
+        }
 
         foreach (MemberDeclarationSyntax member in provider.Type.Members) {
             switch (member) {
