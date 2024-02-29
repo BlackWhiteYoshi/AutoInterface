@@ -143,7 +143,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_Method_SummaryWithAttribute() {
+    public void Member_Method_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -154,7 +154,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                [Test]
+                [Test, Test2]
+                [Test3]
                 public int Test() => 1;
             }
 
@@ -170,6 +171,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
+                [Test, Test2]
+                [Test3]
                 int Test();
             }
 
@@ -405,7 +408,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_Property_SummaryWithAttribute() {
+    public void Member_Property_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -416,7 +419,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                [Test]
+                [Test, Test2]
+                [Test3]
                 public int Test => 1;
             }
 
@@ -432,6 +436,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
+                [Test, Test2]
+                [Test3]
                 int Test { get; }
             }
 
@@ -800,7 +806,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_Indexer_SummaryWithAttribute() {
+    public void Member_Indexer_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -811,7 +817,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                [Test]
+                [Test, Test2]
+                [Test3]
                 public int this[int i] {
                   get => i;
                }
@@ -829,6 +836,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
+                [Test, Test2]
+                [Test3]
                 int this[int i] { get; }
             }
 
@@ -1178,7 +1187,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_EventField_SummaryWithAttribute() {
+    public void Member_EventField_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -1189,7 +1198,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                [Test]
+                [Test, Test2]
+                [Test3]
                 public event Action Test;
             }
 
@@ -1205,6 +1215,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
+                [Test, Test2]
+                [Test3]
                 event Action Test;
             }
 
@@ -1344,7 +1356,7 @@ public sealed class UnitTests {
     }
 
     [Fact]
-    public void Member_EventProperty_SummaryWithAttribute() {
+    public void Member_EventProperty_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
             
@@ -1355,7 +1367,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                [Test]
+                [Test, Test2]
+                [Test3]
                 public event Action Test { add { } remove { } }
             }
 
@@ -1371,6 +1384,8 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
+                [Test, Test2]
+                [Test3]
                 event Action Test;
             }
 

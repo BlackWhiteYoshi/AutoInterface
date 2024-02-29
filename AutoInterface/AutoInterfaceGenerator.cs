@@ -268,11 +268,11 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         }
 
         foreach (MemberDeclarationSyntax member in provider.Type.Members) {
+            if (member.GetAttribute("IgnoreAutoInterface") != null)
+                break;
+
             switch (member) {
                 case MethodDeclarationSyntax methodDeclarationSyntax: {
-                    if (methodDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
-                        break;
-
                     // public or explicit interface specifier
                     if (!methodDeclarationSyntax.Modifiers.Contains("public"))
                         if (!(methodDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
@@ -302,6 +302,13 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                             break;
                         }
 
+                    // attributes
+                    if (methodDeclarationSyntax.AttributeLists.Count > 0) {
+                        builder.Append("    ");
+                        builder.Append(methodDeclarationSyntax.AttributeLists.ToString());
+                        builder.Append('\n');
+                    }
+
                     builder.Append("    ");
                     builder.Append(modifiers);
                     builder.Append(methodDeclarationSyntax.ReturnType.ToString());
@@ -318,9 +325,6 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case PropertyDeclarationSyntax propertyDeclarationSyntax: {
-                    if (propertyDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
-                        break;
-
                     // public or explicit interface specifier
                     if (!propertyDeclarationSyntax.Modifiers.Contains("public"))
                         if (!(propertyDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
@@ -349,6 +353,13 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
+
+                    // attributes
+                    if (propertyDeclarationSyntax.AttributeLists.Count > 0) {
+                        builder.Append("    ");
+                        builder.Append(propertyDeclarationSyntax.AttributeLists.ToString());
+                        builder.Append('\n');
+                    }
 
                     builder.Append("    ");
                     builder.Append(modifiers);
@@ -379,9 +390,6 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case IndexerDeclarationSyntax indexerDeclarationSyntax: {
-                    if (indexerDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
-                        break;
-
                     // public or explicit interface specifier
                     if (!indexerDeclarationSyntax.Modifiers.Contains("public"))
                         if (!(indexerDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
@@ -410,6 +418,13 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
+
+                    // attributes
+                    if (indexerDeclarationSyntax.AttributeLists.Count > 0) {
+                        builder.Append("    ");
+                        builder.Append(indexerDeclarationSyntax.AttributeLists.ToString());
+                        builder.Append('\n');
+                    }
 
                     builder.Append("    ");
                     builder.Append(modifiers);
@@ -441,9 +456,6 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case EventFieldDeclarationSyntax eventFieldDeclarationSyntax: {
-                    if (eventFieldDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
-                        break;
-
                     if (!eventFieldDeclarationSyntax.Modifiers.Contains("public"))
                         break;
 
@@ -471,6 +483,13 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                             break;
                         }
 
+                    // attributes
+                    if (eventFieldDeclarationSyntax.AttributeLists.Count > 0) {
+                        builder.Append("    ");
+                        builder.Append(eventFieldDeclarationSyntax.AttributeLists.ToString());
+                        builder.Append('\n');
+                    }
+
                     builder.Append("    ");
                     builder.Append(modifiers);
                     builder.Append("event ");
@@ -486,9 +505,6 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case EventDeclarationSyntax eventDeclarationSyntax: {
-                    if (eventDeclarationSyntax.GetAttribute("IgnoreAutoInterface") != null)
-                        break;
-
                     // public or explicit interface specifier
                     if (!eventDeclarationSyntax.Modifiers.Contains("public"))
                         if (!(eventDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
@@ -517,6 +533,13 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
+
+                    // attributes
+                    if (eventDeclarationSyntax.AttributeLists.Count > 0) {
+                        builder.Append("    ");
+                        builder.Append(eventDeclarationSyntax.AttributeLists.ToString());
+                        builder.Append('\n');
+                    }
 
                     builder.Append("    ");
                     builder.Append(modifiers);
