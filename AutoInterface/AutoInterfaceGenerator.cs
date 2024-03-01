@@ -255,7 +255,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
         foreach (MemberDeclarationSyntax member in provider.Type.Members) {
             if (member.GetAttribute("IgnoreAutoInterface") != null)
-                break;
+                continue;
 
             switch (member) {
                 case FieldDeclarationSyntax fieldDeclarationSyntax: {
