@@ -2086,6 +2086,7 @@ public sealed class UnitTests {
         Assert.Equal(expected, sourceText);
     }
 
+
     [Fact]
     public void RecordClass() {
         const string input = """
@@ -2135,9 +2136,9 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest {
-                string Name { get; }
-
                 int Number { get; init; }
+
+                string Name { get; init; }
             }
 
             """;
@@ -2171,6 +2172,7 @@ public sealed class UnitTests {
             """;
         Assert.Equal(expected, sourceText);
     }
+
 
     [Fact]
     public void RecordStruct() {
@@ -2221,9 +2223,9 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest {
-                string Name { get; set; }
-
                 int Number { get; init; }
+
+                string Name { get; set; }
             }
 
             """;
@@ -2253,6 +2255,86 @@ public sealed class UnitTests {
             public interface ITest {
                 int Number { get; init; }
             }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordOverwriteProperty() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record Test(int Number) {
+                public int Number { get; } = Number;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Number { get; }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordOverwriteField() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record Test(int Number) {
+                private int Number = Number;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {}
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordOverwriteMultipleFields() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record Test(int Number, int Number2) {
+                private int Number = Number, Number2 = Number2;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
