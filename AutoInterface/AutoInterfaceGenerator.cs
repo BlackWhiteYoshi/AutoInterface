@@ -327,9 +327,18 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.Append(' ');
                     builder.Append(methodDeclarationSyntax.Identifier.ValueText);
 
-                    builder.Append(methodDeclarationSyntax.ParameterList.ToString());
-                    builder.Append(';');
+                    if (methodDeclarationSyntax.TypeParameterList != null)
+                        builder.Append(methodDeclarationSyntax.TypeParameterList.ToString());
 
+                    builder.Append(methodDeclarationSyntax.ParameterList.ToString());
+
+                    string constraintClauses = methodDeclarationSyntax.ConstraintClauses.ToString();
+                    if (constraintClauses.Length > 0) {
+                        builder.Append(' ');
+                        builder.Append(constraintClauses);
+                    }
+
+                    builder.Append(';');
                     builder.Append('\n');
                     builder.Append('\n');
 

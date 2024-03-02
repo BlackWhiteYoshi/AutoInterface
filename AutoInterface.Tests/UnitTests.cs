@@ -81,6 +81,34 @@ public sealed class UnitTests {
     }
 
     [Fact]
+    public void Member_Method_Generic() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test {
+                public T? MTest<T>() where T : INumber<T> => default;
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                T? MTest<T>() where T : INumber<T>;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
     public void Member_Method_Parameter() {
         const string input = """
             using AutoInterfaceAttributes;
