@@ -2,5 +2,5 @@
 
 public static partial class Attributes {
     private const string NAME = "AutoInterface";
-    private const string VERSION = "2.0.1";
+    private const string VERSION = "2.0.2";
 }
