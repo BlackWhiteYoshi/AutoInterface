@@ -1,21 +1,13 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.ObjectPool;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Immutable;
 using System.Text;
 
 namespace AutoInterface;
 
 [Generator(LanguageNames.CSharp)]
-public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
-    /// <summary>
-    /// Container for 2 Nodes: The attribute AutoInterfaceAttribute together with the corresponding class/struct.
-    /// </summary>
-    /// <param name="Attribute"></param>
-    /// <param name="Type"></param>
-    private readonly record struct AttributeWithClass(AttributeSyntax Attribute, TypeDeclarationSyntax Type) : IEquatable<AttributeWithClass>;
-
-
+public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
     private readonly ObjectPool<StringBuilder> stringBuilderPool = new DefaultObjectPoolProvider().CreateStringBuilderPool(initialCapacity: 8192, maximumRetainedCapacity: 1024 * 1024);
 
 
@@ -27,113 +19,59 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         });
 
         // all classes/structs with AutoInterfaceAttribute
-        IncrementalValuesProvider<AttributeWithClass> interfaceTypeProvider = context.SyntaxProvider.CreateSyntaxProvider(Predicate, Transform);
+        IncrementalValuesProvider<ClassWithAttributeData> interfaceTypeProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
+            "AutoInterfaceAttributes.AutoInterfaceAttribute",
+            (SyntaxNode syntaxNode, CancellationToken _) => syntaxNode is ClassDeclarationSyntax or RecordDeclarationSyntax or StructDeclarationSyntax,
+            (GeneratorAttributeSyntaxContext syntaxContext, CancellationToken _) => ((TypeDeclarationSyntax)syntaxContext.TargetNode, syntaxContext.Attributes))
+            .SelectMany(((TypeDeclarationSyntax type, ImmutableArray<AttributeData> attributes) pair, CancellationToken _) => {
+                ImmutableArray<ClassWithAttributeData>.Builder attributeWithClassList = ImmutableArray.CreateBuilder<ClassWithAttributeData>(pair.attributes.Length);
+                foreach (AttributeData attributeData in pair.attributes)
+                    attributeWithClassList.Add(new ClassWithAttributeData(pair.type, attributeData));
+                return attributeWithClassList;
+            });
 
         context.RegisterSourceOutput(interfaceTypeProvider, Execute);
     }
 
 
-    private static bool Predicate(SyntaxNode syntaxNode, CancellationToken _) {
-        if (syntaxNode is not AttributeSyntax attributeSyntax)
-            return false;
+    private void Execute(SourceProductionContext context, ClassWithAttributeData provider) {
+        TypeDeclarationSyntax targetType = provider.Type;
+        AttributeData attributeData = provider.AttributeData;
 
-        if (attributeSyntax.Parent?.Parent is not (ClassDeclarationSyntax or RecordDeclarationSyntax or StructDeclarationSyntax))
-            return false;
-
-
-        string identifier = attributeSyntax.Name switch {
-            SimpleNameSyntax simpleName => simpleName.Identifier.ValueText,
-            QualifiedNameSyntax qualifiedName => qualifiedName.Right.Identifier.ValueText,
-            _ => string.Empty
-        };
-
-        if (identifier != "AutoInterface" && identifier != "AutoInterfaceAttribute")
-            return false;
-
-
-        return true;
-    }
-
-    private static AttributeWithClass Transform(GeneratorSyntaxContext syntaxContext, CancellationToken _) {
-        AttributeSyntax attribute = (AttributeSyntax)syntaxContext.Node;
-        TypeDeclarationSyntax type = (TypeDeclarationSyntax)attribute.Parent!.Parent!;
-        return new AttributeWithClass(attribute, type);
-    }
-
-
-    private void Execute(SourceProductionContext context, AttributeWithClass provider) {
         (string name, string modifier, string namspace, string[] inheritance, bool staticMembers) attribute;
         {
-            if (provider.Attribute.ArgumentList != null) {
-                // Name
-                if (provider.Attribute.ArgumentList.GetLiteral("Name") is LiteralExpressionSyntax nameLiteral)
-                    attribute.name = nameLiteral.Token.ValueText;
-                else
-                    attribute.name = DefaultName(provider);
-
-                // Modifier
-                if (provider.Attribute.ArgumentList.GetLiteral("Modifier") is LiteralExpressionSyntax modifierLiteral)
-                    attribute.modifier = modifierLiteral.Token.ValueText;
-                else
-                    attribute.modifier = DefaultModifier();
-
-                // Namespace
-                if (provider.Attribute.ArgumentList.GetLiteral("Namespace") is LiteralExpressionSyntax namespaceLiteral)
-                    attribute.namspace = namespaceLiteral.Token.ValueText;
-                else
-                    attribute.namspace = DefaultNamespace(provider);
-
-                // Inheritance
-                {
-                    attribute.inheritance = provider.Attribute.ArgumentList.GetExpression("Inheritance") switch {
-                        CollectionExpressionSyntax collectionExpression => ExpressionElementsToStringArray(collectionExpression),
-                        ImplicitArrayCreationExpressionSyntax arrayExpression => ExpressionsToStringArray(arrayExpression.Initializer),
-                        ArrayCreationExpressionSyntax { Initializer: InitializerExpressionSyntax initializerExpression } => ExpressionsToStringArray(initializerExpression),
-                        _ => DefaultInheritance()
-                    };
-
-                    static string[] ExpressionsToStringArray(InitializerExpressionSyntax initializerExpression) {
-                        string[] result = new string[initializerExpression.Expressions.Count];
-
-                        for (int i = 0; i < initializerExpression.Expressions.Count; i++)
-                            if (initializerExpression.Expressions[i] is TypeOfExpressionSyntax typeOfExpression)
-                                result[i] = typeOfExpression.Type.ToString();
-                    
-                        return result;
-                    }
-
-                    static string[] ExpressionElementsToStringArray(CollectionExpressionSyntax collectionExpression) {
-                        string[] result = new string[collectionExpression.Elements.Count];
-
-                        for (int i = 0; i < collectionExpression.Elements.Count; i++)
-                            if (collectionExpression.Elements[i] is ExpressionElementSyntax expression && expression.Expression is TypeOfExpressionSyntax typeOfExpression)
-                                result[i] = typeOfExpression.Type.ToString();
-
-                        return result;
-                    }
+            if (attributeData.NamedArguments.Length > 0) {
+                attribute.name = attributeData.NamedArguments.GetArgument<string>("Name") ?? DefaultName(targetType);
+                attribute.modifier = attributeData.NamedArguments.GetArgument<string>("Modifier") ?? DefaultModifier();
+                attribute.namspace = attributeData.NamedArguments.GetArgument<string>("Namespace") ?? DefaultNamespace(targetType);
+                
+                // attribute.inheritance
+                if (attributeData.NamedArguments.GetArgument("Inheritance") is TypedConstant { Kind: TypedConstantKind.Array } typeArray) {
+                    attribute.inheritance = new string[typeArray.Values.Length];
+                    for (int i = 0; i < attribute.inheritance.Length; i++)
+                        attribute.inheritance[i] = typeArray.Values[i].Value?.ToString() ?? string.Empty;
                 }
-
-                // StaticMembers
-                if (provider.Attribute.ArgumentList.GetLiteral("StaticMembers") is LiteralExpressionSyntax staticMembersLiteral)
-                    attribute.staticMembers = staticMembersLiteral.Token.Value as bool? ?? DefaultStaticMembers();
                 else
-                    attribute.staticMembers = DefaultStaticMembers();
+                    attribute.inheritance = DefaultInheritance();
+
+                attribute.staticMembers = attributeData.NamedArguments.GetArgument<bool>("StaticMembers");
+
             }
             else {
-                attribute.name = DefaultName(provider);
+                attribute.name = DefaultName(targetType);
                 attribute.modifier = DefaultModifier();
-                attribute.namspace = DefaultNamespace(provider);
+                attribute.namspace = DefaultNamespace(targetType);
                 attribute.inheritance = DefaultInheritance();
-                attribute.staticMembers = DefaultStaticMembers();
+                attribute.staticMembers = false;
             }
 
 
-            static string DefaultName(AttributeWithClass provider) => $"I{provider.Type.Identifier.ValueText}";
+            static string DefaultName(TypeDeclarationSyntax targetType) => $"I{targetType.Identifier.ValueText}";
             
             static string DefaultModifier() => "public";
             
-            static string DefaultNamespace(AttributeWithClass provider) {
-                BaseNamespaceDeclarationSyntax? namspace = provider.Type.GetParent<BaseNamespaceDeclarationSyntax>();
+            static string DefaultNamespace(TypeDeclarationSyntax targetType) {
+                BaseNamespaceDeclarationSyntax? namspace = targetType.GetParent<BaseNamespaceDeclarationSyntax>();
                 if (namspace == null)
                     return string.Empty;
                 
@@ -158,13 +96,11 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
             }
 
             static string[] DefaultInheritance() => [];
-
-            static bool DefaultStaticMembers() => false;
         }
 
 
         // tracking record parameter overwrites
-        SeparatedSyntaxList<ParameterSyntax> recordParameterList = provider.Type switch {
+        SeparatedSyntaxList<ParameterSyntax> recordParameterList = targetType switch {
             RecordDeclarationSyntax { ParameterList: ParameterListSyntax } record => record.ParameterList.Parameters,
             _ => default
         };
@@ -184,7 +120,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
         // usingStatements
         {
-            BaseNamespaceDeclarationSyntax? namspace = provider.Type.GetParent<BaseNamespaceDeclarationSyntax>();
+            BaseNamespaceDeclarationSyntax? namspace = targetType.GetParent<BaseNamespaceDeclarationSyntax>();
             while (namspace != null) {
                 string usings = namspace.Usings.ToString();
                 if (usings != string.Empty) {
@@ -194,7 +130,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 namspace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
             }
             
-            CompilationUnitSyntax? compilationUnit = provider.Type.GetParent<CompilationUnitSyntax>();
+            CompilationUnitSyntax? compilationUnit = targetType.GetParent<CompilationUnitSyntax>();
             if (compilationUnit != null) {
                 builder.Append(compilationUnit.Usings.ToString());
                 builder.Append('\n');
@@ -214,7 +150,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
 
         // summary
         {
-            SyntaxTriviaList triviaList = provider.Type.AttributeLists[0].GetLeadingTrivia();
+            SyntaxTriviaList triviaList = targetType.AttributeLists[0].GetLeadingTrivia();
             foreach (SyntaxTrivia trivia in triviaList)
                 if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
                     builder.Append("///");
@@ -227,10 +163,10 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append(attribute.modifier);
         builder.Append(" interface ");
         builder.Append(attribute.name);
-        if (provider.Type.TypeParameterList?.Parameters.Count > 0) {
+        if (targetType.TypeParameterList?.Parameters.Count > 0) {
             builder.Append('<');
 
-            foreach (TypeParameterSyntax parameter in provider.Type.TypeParameterList.Parameters) {
+            foreach (TypeParameterSyntax parameter in targetType.TypeParameterList.Parameters) {
                 builder.Append(parameter.Identifier.ValueText);
                 builder.Append(',');
                 builder.Append(' ');
@@ -254,7 +190,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append('{');
         builder.Append('\n');
 
-        foreach (MemberDeclarationSyntax member in provider.Type.Members) {
+        foreach (MemberDeclarationSyntax member in targetType.Members) {
             if (member.GetAttribute("IgnoreAutoInterface") != null)
                 continue;
 
@@ -588,7 +524,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         // adding non-overwritten record member
         if (recordParameterList.Count > 0) {
             // parameter
-            string getterSetter = ((RecordDeclarationSyntax)provider.Type).ClassOrStructKeyword.ValueText switch {
+            string getterSetter = ((RecordDeclarationSyntax)targetType).ClassOrStructKeyword.ValueText switch {
                 "struct" => " { get; set; }\n\n",
                 _ /* "class" or "" */ => " { get; init; }\n\n"
             };
@@ -630,8 +566,8 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append('\n');
 
         string interfaceName = attribute.name;
-        string className = provider.Type.Identifier.ValueText;
-        string fileName = Path.GetFileName(provider.Type.SyntaxTree.FilePath);
+        string className = targetType.Identifier.ValueText;
+        string fileName = Path.GetFileName(targetType.SyntaxTree.FilePath);
         context.AddSource($"{interfaceName}_{className}_{fileName}.g.cs", builder.ToString());
 
         stringBuilderPool.Return(builder);

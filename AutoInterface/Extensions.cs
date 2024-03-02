@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
 
 namespace AutoInterface;
 
@@ -67,6 +68,34 @@ internal static class Extensions {
 
 
     /// <summary>
+    /// <para>Finds the argument with the given name and returns it's value.</para>
+    /// <para>If not found, it returns null.</para>
+    /// </summary>
+    /// <param name="arguments"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    internal static TypedConstant? GetArgument(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name) {
+        for (int i = 0; i < arguments.Length; i++)
+            if (arguments[i].Key == name)
+                return arguments[i].Value;
+
+        return null;
+    }
+
+    /// <summary>
+    /// <para>Finds the argument with the given name and returns it's value.</para>
+    /// <para>If not found or value is not castable, it returns default.</para>
+    /// </summary>
+    /// <param name="arguments"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    internal static T? GetArgument<T>(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name)
+        => GetArgument(arguments, name) switch {
+            TypedConstant { Value: T value } => value,
+            _ => default
+        };
+
+    /// <summary>
     /// <para>Finds the argument with the given name and returns it's expression.</para>
     /// <para>If not found, it returns null.</para>
     /// </summary>
@@ -81,13 +110,4 @@ internal static class Extensions {
 
         return null;
     }
-
-    /// <summary>
-    /// <para>Finds the argument with the given name and returns it's expression as LiteralExpressionSyntax.</para>
-    /// <para>If not found or expression is not a LiteralExpressionSyntax, it returns null.</para>
-    /// </summary>
-    /// <param name="argumentList"></param>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    internal static LiteralExpressionSyntax? GetLiteral(this AttributeArgumentListSyntax argumentList, string name) => argumentList.GetExpression(name) as LiteralExpressionSyntax;
 }

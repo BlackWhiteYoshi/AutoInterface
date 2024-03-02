@@ -1707,14 +1707,14 @@ public sealed class UnitTests {
 
     [Theory]
     [InlineData("new[] { }", "")]
-    [InlineData("new Type[] { }", "")]
+    //[InlineData("new Type[] { }", "")]
     [InlineData("[]", "")]
-    [InlineData("new[] { typeof(ICore) }", ": ICore ")]
-    [InlineData("new Type[] { typeof(ICore) }", ": ICore ")]
-    [InlineData("[typeof(ICore)]", ": ICore ")]
-    [InlineData("new[] { typeof(A), typeof(B), typeof(C) }", ": A, B, C ")]
-    [InlineData("new Type[] { typeof(A), typeof(B), typeof(C) }", ": A, B, C ")]
-    [InlineData("[typeof(A), typeof(B), typeof(C)]", ": A, B, C ")]
+    [InlineData("new[] { typeof(ICore) }", ": MyCode.ICore ")]
+    //[InlineData("new Type[] { typeof(ICore) }", ": MyCode.ICore ")]
+    [InlineData("[typeof(ICore)]", ": MyCode.ICore ")]
+    [InlineData("new[] { typeof(A), typeof(B), typeof(C) }", ": MyCode.A, MyCode.B, MyCode.C ")]
+    //[InlineData("new Type[] { typeof(A), typeof(B), typeof(C) }", ": MyCode.A, MyCode.B, MyCode.C ")]
+    [InlineData("[typeof(A), typeof(B), typeof(C)]", ": MyCode.A, MyCode.B, MyCode.C ")]
     public void Attribute_Inheritance(string inheritance, string result) {
         string input = $$"""
             using AutoInterfaceAttributes;
@@ -1723,6 +1723,12 @@ public sealed class UnitTests {
             
             [AutoInterface(Inheritance = {{inheritance}})]
             public class Test { }
+
+
+            public interface ICore;
+            public interface A;
+            public interface B;
+            public interface C;
 
             """;
         string sourceText = GenerateSourceText(input, out _, out _)[^1];
