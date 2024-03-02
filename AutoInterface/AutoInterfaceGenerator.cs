@@ -169,6 +169,7 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
             _ => default
         };
         Span<bool> recordParameterOverwrittenFlags = stackalloc bool[recordParameterList.Count];
+        bool recordDeconstructOverwrittenFlag = false;
 
 
         StringBuilder builder = stringBuilderPool.Get();
@@ -275,6 +276,19 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                     if (!methodDeclarationSyntax.Modifiers.Contains("public"))
                         if (!(methodDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
                             break;
+
+                    // check for Deconstruct() overwrite
+                    if (recordParameterList.Count > 0)
+                        if (methodDeclarationSyntax.Identifier.ValueText == "Deconstruct")
+                            if (!methodDeclarationSyntax.Modifiers.Contains("static"))
+                                if (methodDeclarationSyntax.ParameterList.Parameters.Count == recordParameterList.Count) {
+                                    for (int i = 0; i < recordParameterList.Count; i++)
+                                        if (methodDeclarationSyntax.ParameterList.Parameters[i].Modifiers is not [SyntaxToken { ValueText: "out" }])
+                                            if (methodDeclarationSyntax.ParameterList.Parameters[i].Type != recordParameterList[i].Type)
+                                                goto DeconstructChecked;
+                                    recordDeconstructOverwrittenFlag = true;
+                                }
+                    DeconstructChecked:
 
                     string? modifiers;
                     if (!methodDeclarationSyntax.Modifiers.Contains("static"))
@@ -562,8 +576,9 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
             }
         }
 
-        // adding non-overwritten record parameter
+        // adding non-overwritten record member
         if (recordParameterList.Count > 0) {
+            // parameter
             string getterSetter = ((RecordDeclarationSyntax)provider.Type).ClassOrStructKeyword.ValueText switch {
                 "struct" => " { get; set; }\n\n",
                 _ /* "class" or "" */ => " { get; init; }\n\n"
@@ -582,6 +597,21 @@ public sealed class AutoInterfaceGenerator : IIncrementalGenerator {
                 builder.Append(' ');
                 builder.Append(parameter.Identifier.ValueText);
                 builder.Append(getterSetter);
+            }
+
+            // Deconstruct()
+            if (!recordDeconstructOverwrittenFlag) {
+                builder.Append("    void Deconstruct(");
+                foreach (ParameterSyntax parameter in recordParameterList) {
+                    builder.Append("out ");
+                    builder.Append(parameter.Type);
+                    builder.Append(' ');
+                    builder.Append(parameter.Identifier.ValueText);
+                    builder.Append(',');
+                    builder.Append(' ');
+                }
+                builder.Length -= 2;
+                builder.Append(");\n\n");
             }
         }
 

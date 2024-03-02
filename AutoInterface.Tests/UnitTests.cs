@@ -2139,6 +2139,8 @@ public sealed class UnitTests {
                 int Number { get; init; }
 
                 string Name { get; init; }
+
+                void Deconstruct(out string Name);
             }
 
             """;
@@ -2226,6 +2228,8 @@ public sealed class UnitTests {
                 int Number { get; init; }
 
                 string Name { get; set; }
+
+                void Deconstruct(out string Name);
             }
 
             """;
@@ -2282,6 +2286,8 @@ public sealed class UnitTests {
 
             public interface ITest {
                 int Number { get; }
+
+                void Deconstruct(out int Number);
             }
 
             """;
@@ -2308,7 +2314,9 @@ public sealed class UnitTests {
 
             namespace MyCode;
 
-            public interface ITest {}
+            public interface ITest {
+                void Deconstruct(out int Number);
+            }
 
             """;
         Assert.Equal(expected, sourceText);
@@ -2334,7 +2342,42 @@ public sealed class UnitTests {
 
             namespace MyCode;
 
-            public interface ITest {}
+            public interface ITest {
+                void Deconstruct(out int Number, out int Number2);
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public void RecordOverwriteDeconstrcut() {
+        const string input = """
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public record Test(int Number) {
+                public int Deconstruct(out int a) {
+                    a = 1;
+                    return 2;
+                }
+            }
+
+            """;
+        string sourceText = GenerateSourceText(input, out _, out _)[^1];
+
+        const string expected = $$"""
+            {{GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public interface ITest {
+                int Deconstruct(out int a);
+
+                int Number { get; init; }
+            }
 
             """;
         Assert.Equal(expected, sourceText);
