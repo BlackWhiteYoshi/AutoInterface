@@ -31,7 +31,7 @@ public sealed class UnitTests {
             PortableExecutableReference metadataReference = MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location);
             CSharpCompilationOptions compilationOptions = new(OutputKind.ConsoleApplication);
 
-            return CSharpCompilation.Create("compilation", new[] { syntaxTree }, new[] { metadataReference }, compilationOptions);
+            return CSharpCompilation.Create("compilation", [syntaxTree], [metadataReference], compilationOptions);
         }
     }
 
@@ -61,7 +61,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                public int Test() => 1;
+                public int MTest() => 1;
             }
 
             """;
@@ -73,7 +73,7 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest {
-                int Test();
+                int MTest();
             }
 
             """;
@@ -89,7 +89,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                public int Test(int number, string str) => 1;
+                public int MTest(int number, string str) => 1;
             }
 
             """;
@@ -101,7 +101,7 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest {
-                int Test(int number, string str);
+                int MTest(int number, string str);
             }
 
             """;
@@ -120,7 +120,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public int Test() => 1;
+                public int MTest() => 1;
             }
 
             """;
@@ -135,7 +135,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                int Test();
+                int MTest();
             }
 
             """;
@@ -156,7 +156,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                public int Test() => 1;
+                public int MTest() => 1;
             }
 
             """;
@@ -173,7 +173,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                int Test();
+                int MTest();
             }
 
             """;
@@ -303,7 +303,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public int Test() => 1;
+                public int MTest() => 1;
 
                 public async Task TestAsync() => Task.CompletedTask;
 
@@ -327,7 +327,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                int Test();
+                int MTest();
 
                 Task TestAsync();
 
@@ -354,7 +354,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                public int Test => 1;
+                public int PTest => 1;
             }
 
             """;
@@ -366,7 +366,7 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest {
-                int Test { get; }
+                int PTest { get; }
             }
 
             """;
@@ -385,7 +385,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public int Test => 1;
+                public int PTest => 1;
             }
 
             """;
@@ -400,7 +400,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                int Test { get; }
+                int PTest { get; }
             }
 
             """;
@@ -421,7 +421,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                public int Test => 1;
+                public int PTest => 1;
             }
 
             """;
@@ -438,7 +438,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                int Test { get; }
+                int PTest { get; }
             }
 
             """;
@@ -680,7 +680,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public int Test => 1;
+                public int PTest => 1;
 
                 public int TestGet { get; } = 2;
 
@@ -712,7 +712,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                int Test { get; }
+                int PTest { get; }
 
                 int TestGet { get; }
 
@@ -1133,7 +1133,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                public event Action Test;
+                public event Action ATest;
             }
 
             """;
@@ -1145,7 +1145,7 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest {
-                event Action Test;
+                event Action ATest;
             }
 
             """;
@@ -1164,7 +1164,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public event Action Test;
+                public event Action ATest;
             }
 
             """;
@@ -1179,7 +1179,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                event Action Test;
+                event Action ATest;
             }
 
             """;
@@ -1200,7 +1200,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                public event Action Test;
+                public event Action ATest;
             }
 
             """;
@@ -1217,7 +1217,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                event Action Test;
+                event Action ATest;
             }
 
             """;
@@ -1263,7 +1263,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public event Action Test;
+                public event Action ATest;
 
                 [IgnoreAutoInterface]
                 public event Action NoTest;
@@ -1281,7 +1281,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                event Action Test;
+                event Action ATest;
             }
 
             """;
@@ -1302,7 +1302,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test {
-                public event Action Test { add { } remove { } }
+                public event Action ATest { add { } remove { } }
             }
 
             """;
@@ -1314,7 +1314,7 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest {
-                event Action Test;
+                event Action ATest;
             }
 
             """;
@@ -1333,7 +1333,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public event Action Test { add { } remove { } }
+                public event Action ATest { add { } remove { } }
             }
 
             """;
@@ -1348,7 +1348,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                event Action Test;
+                event Action ATest;
             }
 
             """;
@@ -1369,7 +1369,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                public event Action Test { add { } remove { } }
+                public event Action ATest { add { } remove { } }
             }
 
             """;
@@ -1386,7 +1386,7 @@ public sealed class UnitTests {
                 /// </summary>
                 [Test, Test2]
                 [Test3]
-                event Action Test;
+                event Action ATest;
             }
 
             """;
@@ -1460,7 +1460,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public event Action Test { add { } remove { } }
+                public event Action ATest { add { } remove { } }
 
                 event Action ITest.ExplicitTest { add { } remove { } }
 
@@ -1480,7 +1480,7 @@ public sealed class UnitTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                event Action Test;
+                event Action ATest;
 
                 event Action ExplicitTest;
             }
@@ -2421,7 +2421,7 @@ public sealed class UnitTests {
             
             [AutoInterface]
             public class Test<T> {
-                public T? Test() => default;
+                public T? MTest() => default;
             }
 
             """;
@@ -2433,7 +2433,7 @@ public sealed class UnitTests {
             namespace MyCode;
 
             public interface ITest<T> {
-                T? Test();
+                T? MTest();
             }
 
             """;
