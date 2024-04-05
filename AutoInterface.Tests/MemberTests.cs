@@ -790,8 +790,8 @@ public static class MemberTests {
             [AutoInterface]
             public class TestGet {
                 public int this[int i] {
-                  get => i;
-               }
+                    get => i;
+                }
             }
 
             """;
@@ -824,8 +824,8 @@ public static class MemberTests {
                 /// my description
                 /// </summary>
                 public int this[int i] {
-                  get => i;
-               }
+                    get => i;
+                }
             }
 
             """;
@@ -862,8 +862,8 @@ public static class MemberTests {
                 [Test, Test2]
                 [Test3]
                 public int this[int i] {
-                  get => i;
-               }
+                    get => i;
+                }
             }
 
             """;
@@ -897,8 +897,8 @@ public static class MemberTests {
             [AutoInterface]
             public class TestGet {
                 public int this[int i] {
-                  get { return i; }
-               }
+                    get { return i; }
+                }
             }
 
             """;
@@ -928,8 +928,8 @@ public static class MemberTests {
             [AutoInterface]
             public class TestSet {
                 public int this[int i] {
-                  set { }
-               }
+                    set { }
+                }
             }
 
             """;
@@ -958,9 +958,9 @@ public static class MemberTests {
             [AutoInterface]
             public class TestGetSet {
                 public int this[int i] {
-                  get => i;
-                  set { }
-               }
+                    get => i;
+                    set { }
+                }
             }
 
             """;
@@ -989,9 +989,9 @@ public static class MemberTests {
             [AutoInterface]
             public class TestExplicit {
                 int ITestExplicit.this[int i] {
-                  get => i
-                  set { }
-               }
+                    get => i
+                    set { }
+                }
             }
 
             """;
@@ -1021,9 +1021,9 @@ public static class MemberTests {
             public class NoTest {
                 [IgnoreAutoInterface]
                 public int this[int i] {
-                  get { return i; }
-                  set { }
-               }
+                    get { return i; }
+                    set { }
+                }
             }
 
             """;
@@ -1053,40 +1053,40 @@ public static class MemberTests {
                 /// my description
                 /// </summary>
                 public int this[int i] {
-                  get { return i; }
-               }
+                    get { return i; }
+                }
             }
 
             [AutoInterface]
             public class TestSet {
                 public int this[int i] {
-                  set { }
-               }
+                    set { }
+                }
             }
 
             [AutoInterface]
             public class TestGetSet {
                 public int this[int i] {
-                  get { return i; }
-                  set { }
-               }
+                    get { return i; }
+                    set { }
+                }
             }
 
             [AutoInterface]
             public class TestExplicit {
                 int ITestExplicit.this[int i] {
-                  get { return i; }
-                  set { }
-               }
+                    get { return i; }
+                    set { }
+                }
             }
 
             [AutoInterface]
             public class NoTest {
                 [IgnoreAutoInterface]
                 public int this[int i] {
-                  get { return i; }
-                  set { }
-               }
+                    get { return i; }
+                    set { }
+                }
             }
 
             """;

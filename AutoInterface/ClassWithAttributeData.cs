@@ -8,8 +8,9 @@ namespace AutoInterface;
 /// </summary>
 /// <param name="type"></param>
 /// <param name="attributeData"></param>
-public readonly struct ClassWithAttributeData(TypeDeclarationSyntax type, AttributeData attributeData) : IEquatable<ClassWithAttributeData> {
+public readonly struct ClassWithAttributeData(TypeDeclarationSyntax type, INamedTypeSymbol typeSymbol, AttributeData attributeData) : IEquatable<ClassWithAttributeData> {
     public TypeDeclarationSyntax Type { get; } = type;
+    public INamedTypeSymbol TypeSymbol { get; } = typeSymbol;
     public AttributeData AttributeData { get; } = attributeData;
 
 

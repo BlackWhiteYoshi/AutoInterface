@@ -22,11 +22,11 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         IncrementalValuesProvider<ClassWithAttributeData> interfaceTypeProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
             "AutoInterfaceAttributes.AutoInterfaceAttribute",
             (SyntaxNode syntaxNode, CancellationToken _) => syntaxNode is ClassDeclarationSyntax or RecordDeclarationSyntax or StructDeclarationSyntax,
-            (GeneratorAttributeSyntaxContext syntaxContext, CancellationToken _) => ((TypeDeclarationSyntax)syntaxContext.TargetNode, syntaxContext.Attributes))
-            .SelectMany(((TypeDeclarationSyntax type, ImmutableArray<AttributeData> attributes) pair, CancellationToken _) => {
+            (GeneratorAttributeSyntaxContext syntaxContext, CancellationToken _) => ((TypeDeclarationSyntax)syntaxContext.TargetNode, (INamedTypeSymbol)syntaxContext.TargetSymbol, syntaxContext.Attributes))
+            .SelectMany(((TypeDeclarationSyntax type, INamedTypeSymbol typeSymbol, ImmutableArray<AttributeData> attributes) pair, CancellationToken _) => {
                 ImmutableArray<ClassWithAttributeData>.Builder attributeWithClassList = ImmutableArray.CreateBuilder<ClassWithAttributeData>(pair.attributes.Length);
                 foreach (AttributeData attributeData in pair.attributes)
-                    attributeWithClassList.Add(new ClassWithAttributeData(pair.type, attributeData));
+                    attributeWithClassList.Add(new ClassWithAttributeData(pair.type, pair.typeSymbol, attributeData));
                 return attributeWithClassList;
             });
 
@@ -36,66 +36,30 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
     private void Execute(SourceProductionContext context, ClassWithAttributeData provider) {
         TypeDeclarationSyntax targetType = provider.Type;
+        INamedTypeSymbol targetSymbol = provider.TypeSymbol;
         AttributeData attributeData = provider.AttributeData;
 
-        (string name, string modifier, string namspace, string[] inheritance, bool staticMembers) attribute;
+        (string? name, string modifier, string? namspace, INamedTypeSymbol[] inheritance, bool staticMembers) attribute = (null, "public", null, [], false);
         {
             if (attributeData.NamedArguments.Length > 0) {
-                attribute.name = attributeData.NamedArguments.GetArgument<string>("Name") ?? DefaultName(targetType);
-                attribute.modifier = attributeData.NamedArguments.GetArgument<string>("Modifier") ?? DefaultModifier();
-                attribute.namspace = attributeData.NamedArguments.GetArgument<string>("Namespace") ?? DefaultNamespace(targetType);
-                
-                // attribute.inheritance
+                if (attributeData.NamedArguments.GetArgument<string>("Name") is string name)
+                    attribute.name = name;
+                if (attributeData.NamedArguments.GetArgument<string>("Modifier") is string modifier)
+                    attribute.modifier = modifier;
+                if (attributeData.NamedArguments.GetArgument<string>("Namespace") is string namspace)
+                    attribute.namspace = namspace;
                 if (attributeData.NamedArguments.GetArgument("Inheritance") is TypedConstant { Kind: TypedConstantKind.Array } typeArray) {
-                    attribute.inheritance = new string[typeArray.Values.Length];
-                    for (int i = 0; i < attribute.inheritance.Length; i++)
-                        attribute.inheritance[i] = typeArray.Values[i].Value?.ToString() ?? string.Empty;
+                    attribute.inheritance = new INamedTypeSymbol[typeArray.Values.Length];
+                    for (int i = 0; i < attribute.inheritance.Length; i++) {
+                        if (typeArray.Values[i].Value is not INamedTypeSymbol typeSymbol) {
+                            attribute.inheritance = [];
+                            break;
+                        }
+                        attribute.inheritance[i] = typeSymbol;
+                    }
                 }
-                else
-                    attribute.inheritance = DefaultInheritance();
-
                 attribute.staticMembers = attributeData.NamedArguments.GetArgument<bool>("StaticMembers");
-
             }
-            else {
-                attribute.name = DefaultName(targetType);
-                attribute.modifier = DefaultModifier();
-                attribute.namspace = DefaultNamespace(targetType);
-                attribute.inheritance = DefaultInheritance();
-                attribute.staticMembers = false;
-            }
-
-
-            static string DefaultName(TypeDeclarationSyntax targetType) => $"I{targetType.Identifier.ValueText}";
-            
-            static string DefaultModifier() => "public";
-            
-            static string DefaultNamespace(TypeDeclarationSyntax targetType) {
-                BaseNamespaceDeclarationSyntax? namspace = targetType.GetParent<BaseNamespaceDeclarationSyntax>();
-                if (namspace == null)
-                    return string.Empty;
-                
-                BaseNamespaceDeclarationSyntax? parentNamespace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
-                if (parentNamespace == null)
-                    return namspace.Name.ToString();
-
-
-                StringBuilder namespaceBuilder = new();
-                AppendNamespace(parentNamespace, namespaceBuilder);
-                namespaceBuilder.Append(namspace.Name.ToString());
-                return namespaceBuilder.ToString();
-
-                static void AppendNamespace(BaseNamespaceDeclarationSyntax namspace, StringBuilder namespaceBuilder) {
-                    BaseNamespaceDeclarationSyntax? parentNamespace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
-                    if (parentNamespace != null)
-                        AppendNamespace(parentNamespace, namespaceBuilder);
-
-                    namespaceBuilder.Append(namspace.Name.ToString());
-                    namespaceBuilder.Append('.');
-                }
-            }
-
-            static string[] DefaultInheritance() => [];
         }
 
 
@@ -140,12 +104,33 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         }
 
         // namespace
-        if (attribute.namspace != string.Empty) {
-            builder.Append("namespace ");
-            builder.Append(attribute.namspace);
-            builder.Append(';');
-            builder.Append('\n');
-            builder.Append('\n');
+        switch (attribute.namspace) {
+            case "":
+                break; // global namespace -> append nothing
+            case null:
+                INamespaceSymbol namespaceSymbol = targetSymbol.ContainingNamespace;
+                if (namespaceSymbol.Name == string.Empty)
+                    break; // global namespace -> append nothing
+
+                builder.Append("namespace ");
+                AppendNamespace(builder, namespaceSymbol.ContainingNamespace);
+                builder.Append(namespaceSymbol.Name);
+                builder.Append(";\n\n");
+
+                static void AppendNamespace(StringBuilder builder, INamespaceSymbol namespaceSymbol) {
+                    if (namespaceSymbol.Name == string.Empty)
+                        return;
+
+                    AppendNamespace(builder, namespaceSymbol.ContainingNamespace);
+                    builder.Append(namespaceSymbol.Name);
+                    builder.Append('.');
+                }
+                break;
+            default:
+                builder.Append("namespace ");
+                builder.Append(attribute.namspace);
+                builder.Append(";\n\n");
+                break;
         }
 
         // summary
@@ -162,7 +147,13 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         // class/struct declaration
         builder.Append(attribute.modifier);
         builder.Append(" interface ");
-        builder.Append(attribute.name);
+        if (attribute.name is null) {
+            builder.Append('I');
+            builder.Append(targetSymbol.Name);
+        }
+        else
+            builder.Append(attribute.name);
+
         if (targetType.TypeParameterList?.Parameters.Count > 0) {
             builder.Append('<');
 
@@ -175,20 +166,23 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
             builder.Length -= 2;
             builder.Append('>');
         }
+
         if (attribute.inheritance.Length > 0) {
             builder.Append(' ');
             builder.Append(':');
             builder.Append(' ');
-            builder.Append(attribute.inheritance[0]);
+            builder.Append(attribute.inheritance[0].ToDisplayString());
             for (int i = 1; i < attribute.inheritance.Length; i++) {
                 builder.Append(',');
                 builder.Append(' ');
-                builder.Append(attribute.inheritance[i]);
+                builder.Append(attribute.inheritance[i].ToDisplayString());
             }
         }
+
         builder.Append(' ');
         builder.Append('{');
         builder.Append('\n');
+
 
         foreach (MemberDeclarationSyntax member in targetType.Members) {
             if (member.GetAttribute("IgnoreAutoInterface") != null)
@@ -208,10 +202,49 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                 }
 
                 case MethodDeclarationSyntax methodDeclarationSyntax: {
-                    // public or explicit interface specifier
-                    if (!methodDeclarationSyntax.Modifiers.Contains("public"))
-                        if (!(methodDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
+                    if (methodDeclarationSyntax.Modifiers.Contains("public")) {
+                        // inherited member check
+                        foreach (INamedTypeSymbol typeSymbol in attribute.inheritance) {
+                            ImmutableArray<INamedTypeSymbol>.Enumerator allInterfaces = typeSymbol.AllInterfaces.GetEnumerator();
+                            INamedTypeSymbol? inheritedSymbol = typeSymbol;
+                            do {
+                                foreach (ISymbol symbol in inheritedSymbol.GetMembers(methodDeclarationSyntax.Identifier.ValueText)) {
+                                    if (symbol is not IMethodSymbol methodSymbol)
+                                        continue;
+
+                                    foreach (ISymbol target in targetSymbol.GetMembers(methodDeclarationSyntax.Identifier.ValueText))
+                                        if (target is IMethodSymbol targetMethod)
+                                            if (SymbolEqualityComparer.Default.Equals(methodSymbol.ReturnType, targetMethod.ReturnType))
+                                                if (methodSymbol.TypeParameters.Length == targetMethod.TypeParameters.Length)
+                                                    if (methodSymbol.Parameters.SequenceEqual(targetMethod.Parameters, (IParameterSymbol a, IParameterSymbol b) => SymbolEqualityComparer.Default.Equals(a.Type, b.Type)))
+                                                        if (methodSymbol.IsStatic == targetMethod.IsStatic)
+                                                            goto _switchBreak;
+                                }
+
+                                if (!allInterfaces.MoveNext())
+                                    break;
+                                inheritedSymbol = allInterfaces.Current;
+                            } while (true);
+                        }
+                    }
+                    else {
+                        // explicit interface specifier
+                        if (methodDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
                             break;
+
+                        if (attribute.name is null) {
+                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                                break;
+                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                                break;
+                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                                break;
+                        }
+                        else {
+                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                                break;
+                        }
+                    }
 
                     // check for Deconstruct() overwrite
                     if (recordParameterList.Count > 0)
@@ -226,7 +259,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                                 }
                     DeconstructChecked:
 
-                    string? modifiers;
+                    string modifiers;
                     if (!methodDeclarationSyntax.Modifiers.Contains("static"))
                         modifiers = string.Empty; // object-method (non static)
                     else if (attribute.staticMembers)
@@ -278,6 +311,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.Append('\n');
                     builder.Append('\n');
 
+                    _switchBreak:
                     break;
                 }
 
@@ -290,11 +324,49 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         }
 
                     // public or explicit interface specifier
-                    if (!propertyDeclarationSyntax.Modifiers.Contains("public"))
-                        if (!(propertyDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
+                    if (propertyDeclarationSyntax.Modifiers.Contains("public")) {
+                        // inherited member check
+                        foreach (INamedTypeSymbol typeSymbol in attribute.inheritance) {
+                            ImmutableArray<INamedTypeSymbol>.Enumerator allInterfaces = typeSymbol.AllInterfaces.GetEnumerator();
+                            INamedTypeSymbol? inheritedSymbol = typeSymbol;
+                            do {
+                                foreach (ISymbol symbol in inheritedSymbol.GetMembers(propertyDeclarationSyntax.Identifier.ValueText)) {
+                                    if (symbol is not IPropertySymbol propertySymbol)
+                                        continue;
+
+                                    foreach (ISymbol target in targetSymbol.GetMembers(propertyDeclarationSyntax.Identifier.ValueText))
+                                        if (target is IPropertySymbol targetProperty)
+                                            if (SymbolEqualityComparer.Default.Equals(propertySymbol.Type, targetProperty.Type))
+                                                if (propertySymbol.GetMethod is null == targetProperty.GetMethod is null && propertySymbol.SetMethod is null == targetProperty.SetMethod is null)
+                                                    if (propertySymbol.IsStatic == targetProperty.IsStatic)
+                                                        goto _switchBreak;
+                                }
+
+                                if (!allInterfaces.MoveNext())
+                                    break;
+                                inheritedSymbol = allInterfaces.Current;
+                            } while (true);
+                        }
+                    }
+                    else {
+                        if (propertyDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
                             break;
 
-                    string? modifiers;
+                        if (attribute.name is null) {
+                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                                break;
+                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                                break;
+                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                                break;
+                        }
+                        else {
+                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                                break;
+                        }
+                    }
+
+                    string modifiers;
                     if (!propertyDeclarationSyntax.Modifiers.Contains("static"))
                         modifiers = string.Empty; // object-method (non static)
                     else if (attribute.staticMembers)
@@ -350,22 +422,53 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.Append('\n');
                     builder.Append('\n');
 
+                    _switchBreak:
                     break;
                 }
 
                 case IndexerDeclarationSyntax indexerDeclarationSyntax: {
                     // public or explicit interface specifier
-                    if (!indexerDeclarationSyntax.Modifiers.Contains("public"))
-                        if (!(indexerDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
+                    if (indexerDeclarationSyntax.Modifiers.Contains("public")) {
+                        // inherited member check
+                        foreach (INamedTypeSymbol typeSymbol in attribute.inheritance) {
+                            ImmutableArray<INamedTypeSymbol>.Enumerator allInterfaces = typeSymbol.AllInterfaces.GetEnumerator();
+                            INamedTypeSymbol? inheritedSymbol = typeSymbol;
+                            do {
+                                foreach (ISymbol symbol in inheritedSymbol.GetMembers()) {
+                                    if (symbol is not IPropertySymbol { IsIndexer: true } propertySymbol)
+                                        continue;
+
+                                    foreach (ISymbol target in targetSymbol.GetMembers())
+                                        if (target is IPropertySymbol { IsIndexer: true } targetIndexer)
+                                            if (SymbolEqualityComparer.Default.Equals(propertySymbol.Type, targetIndexer.Type))
+                                                if (propertySymbol.Parameters.SequenceEqual(targetIndexer.Parameters, (IParameterSymbol a, IParameterSymbol b) => SymbolEqualityComparer.Default.Equals(a.Type, b.Type)))
+                                                    if (propertySymbol.GetMethod is null == targetIndexer.GetMethod is null && propertySymbol.SetMethod is null == targetIndexer.SetMethod is null)
+                                                        goto _switchBreak;
+                                }
+
+                                if (!allInterfaces.MoveNext())
+                                    break;
+                                inheritedSymbol = allInterfaces.Current;
+                            } while (true);
+                        }
+                    }
+                    else {
+                        if (indexerDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
                             break;
 
-                    string? modifiers;
-                    if (!indexerDeclarationSyntax.Modifiers.Contains("static"))
-                        modifiers = string.Empty; // object-method (non static)
-                    else if (attribute.staticMembers)
-                        modifiers = "static abstract "; // static-method and static is enabled
-                    else
-                        break;  // ignore static member
+                        if (attribute.name is null) {
+                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                                break;
+                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                                break;
+                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                                break;
+                        }
+                        else {
+                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                                break;
+                        }
+                    }
 
 
                     // summary
@@ -391,7 +494,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     }
 
                     builder.Append("    ");
-                    builder.Append(modifiers);
                     builder.Append(indexerDeclarationSyntax.Type.ToString());
                     builder.Append(' ');
                     builder.Append("this");
@@ -416,14 +518,39 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.Append('\n');
                     builder.Append('\n');
 
+                    _switchBreak:
                     break;
                 }
 
                 case EventFieldDeclarationSyntax eventFieldDeclarationSyntax: {
-                    if (!eventFieldDeclarationSyntax.Modifiers.Contains("public"))
+                    if (eventFieldDeclarationSyntax.Modifiers.Contains("public")) {
+                        // inherited member check
+                        foreach (INamedTypeSymbol typeSymbol in attribute.inheritance) {
+                            ImmutableArray<INamedTypeSymbol>.Enumerator allInterfaces = typeSymbol.AllInterfaces.GetEnumerator();
+                            INamedTypeSymbol? inheritedSymbol = typeSymbol;
+                            do {
+                                foreach (VariableDeclaratorSyntax eventFieldVariable in eventFieldDeclarationSyntax.Declaration.Variables)
+                                    foreach (ISymbol symbol in inheritedSymbol.GetMembers(eventFieldVariable.Identifier.ValueText)) {
+                                        if (symbol is not IEventSymbol eventSymbol)
+                                            continue;
+
+                                        foreach (ISymbol target in targetSymbol.GetMembers(eventFieldVariable.Identifier.ValueText))
+                                            if (target is IEventSymbol targetEvent)
+                                                if (SymbolEqualityComparer.Default.Equals(eventSymbol.Type, targetEvent.Type))
+                                                    if (eventSymbol.IsStatic == targetEvent.IsStatic)
+                                                        goto _switchBreak;
+                                    }
+
+                                if (!allInterfaces.MoveNext())
+                                    break;
+                                inheritedSymbol = allInterfaces.Current;
+                            } while (true);
+                        }
+                    }
+                    else
                         break;
 
-                    string? modifiers;
+                    string modifiers;
                     if (!eventFieldDeclarationSyntax.Modifiers.Contains("static"))
                         modifiers = string.Empty; // object-method (non static)
                     else if (attribute.staticMembers)
@@ -465,16 +592,54 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.Append('\n');
                     builder.Append('\n');
 
+                    _switchBreak:
                     break;
                 }
 
                 case EventDeclarationSyntax eventDeclarationSyntax: {
                     // public or explicit interface specifier
-                    if (!eventDeclarationSyntax.Modifiers.Contains("public"))
-                        if (!(eventDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is IdentifierNameSyntax identifierSyntax && identifierSyntax.Identifier.ValueText == attribute.name))
+                    if (eventDeclarationSyntax.Modifiers.Contains("public")) {
+                        // inherited member check
+                        foreach (INamedTypeSymbol typeSymbol in attribute.inheritance) {
+                            ImmutableArray<INamedTypeSymbol>.Enumerator allInterfaces = typeSymbol.AllInterfaces.GetEnumerator();
+                            INamedTypeSymbol? inheritedSymbol = typeSymbol;
+                            do {
+                                foreach (ISymbol symbol in inheritedSymbol.GetMembers(eventDeclarationSyntax.Identifier.ValueText)) {
+                                    if (symbol is not IEventSymbol eventSymbol)
+                                        continue;
+
+                                    foreach (ISymbol target in targetSymbol.GetMembers(eventDeclarationSyntax.Identifier.ValueText))
+                                        if (target is IEventSymbol targetEvent)
+                                            if (SymbolEqualityComparer.Default.Equals(eventSymbol.Type, targetEvent.Type))
+                                                if (eventSymbol.IsStatic == targetEvent.IsStatic)
+                                                    goto _switchBreak;
+                                }
+
+                                if (!allInterfaces.MoveNext())
+                                    break;
+                                inheritedSymbol = allInterfaces.Current;
+                            } while (true);
+                        }
+                    }
+                    else {
+                        if (eventDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
                             break;
 
-                    string? modifiers;
+                        if (attribute.name is null) {
+                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                                break;
+                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                                break;
+                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                                break;
+                        }
+                        else {
+                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                                break;
+                        }
+                    }
+
+                    string modifiers;
                     if (!eventDeclarationSyntax.Modifiers.Contains("static"))
                         modifiers = string.Empty; // object-method (non static)
                     else if (attribute.staticMembers)
@@ -516,6 +681,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.Append('\n');
                     builder.Append('\n');
 
+                    _switchBreak:
                     break;
                 }
             }
@@ -565,10 +731,24 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         builder.Append('}');
         builder.Append('\n');
 
-        string interfaceName = attribute.name;
-        string className = targetType.Identifier.ValueText;
-        string fileName = Path.GetFileName(targetType.SyntaxTree.FilePath);
-        context.AddSource($"{interfaceName}_{className}_{fileName}.g.cs", builder.ToString());
+        string source = builder.ToString();
+
+        
+        builder.Clear();
+        if (attribute.name is null) {
+            builder.Append('I');
+            builder.Append(targetSymbol.Name);
+        }
+        else
+            builder.Append(attribute.name);
+        builder.Append('_');
+        builder.Append(targetSymbol.Name);
+        builder.Append('_');
+        builder.Append(Path.GetFileName(targetType.SyntaxTree.FilePath));
+        builder.Append(".g.cs");
+        string hintName = builder.ToString();
+
+        context.AddSource(hintName, source);
 
         stringBuilderPool.Return(builder);
     }
