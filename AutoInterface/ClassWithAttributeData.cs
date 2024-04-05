@@ -17,12 +17,11 @@ public readonly struct ClassWithAttributeData(TypeDeclarationSyntax type, Attrib
 
     public static bool operator !=(ClassWithAttributeData left, ClassWithAttributeData right) => !(left == right);
 
-    public override bool Equals(object? obj) {
-        if (obj is not ClassWithAttributeData classWithAttributeData)
-            return false;
-
-        return Equals(classWithAttributeData);
-    }
+    public override bool Equals(object? obj)
+        => obj switch {
+            ClassWithAttributeData classWithAttributeData => Equals(classWithAttributeData),
+            _ => false
+        };
 
     public bool Equals(ClassWithAttributeData other) => Type == other.Type;
 

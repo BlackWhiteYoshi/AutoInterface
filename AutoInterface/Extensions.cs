@@ -94,20 +94,4 @@ internal static class Extensions {
             TypedConstant { Value: T value } => value,
             _ => default
         };
-
-    /// <summary>
-    /// <para>Finds the argument with the given name and returns it's expression.</para>
-    /// <para>If not found, it returns null.</para>
-    /// </summary>
-    /// <param name="argumentList"></param>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    internal static ExpressionSyntax? GetExpression(this AttributeArgumentListSyntax argumentList, string name) {
-        foreach (AttributeArgumentSyntax argument in argumentList.Arguments) {
-            if (argument.NameEquals?.Name.Identifier.ValueText == name)
-                return argument.Expression;
-        }
-
-        return null;
-    }
 }
