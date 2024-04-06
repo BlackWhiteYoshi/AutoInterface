@@ -46,7 +46,7 @@ public interface IExample {
 
 AutoInterface supports:
 
-- classes and structs
+- classes, records and structs
 - all members (Method, Property, Indexer, Event)
 - also explicit Interface members
 - multiple attributes on same class
@@ -57,6 +57,7 @@ AutoInterface supports:
   * interface modifier
   * interface namespace
   * interface inheritance
+  * interface nesting
   * static members as static abstract
   * ignore specific members
 

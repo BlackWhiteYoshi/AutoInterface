@@ -35,33 +35,26 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
 
     private void Execute(SourceProductionContext context, ClassWithAttributeData provider) {
+        const char INDENTCHAR = ' ';
+        const int INDENTLEVEL = 4;
+        int currentIndent = 0;
+
         TypeDeclarationSyntax targetType = provider.Type;
         INamedTypeSymbol targetSymbol = provider.TypeSymbol;
         AttributeData attributeData = provider.AttributeData;
 
-        (string? name, string modifier, string? namspace, INamedTypeSymbol[] inheritance, bool staticMembers) attribute = (null, "public", null, [], false);
-        {
-            if (attributeData.NamedArguments.Length > 0) {
-                if (attributeData.NamedArguments.GetArgument<string>("Name") is string name)
-                    attribute.name = name;
-                if (attributeData.NamedArguments.GetArgument<string>("Modifier") is string modifier)
-                    attribute.modifier = modifier;
-                if (attributeData.NamedArguments.GetArgument<string>("Namespace") is string namspace)
-                    attribute.namspace = namspace;
-                if (attributeData.NamedArguments.GetArgument("Inheritance") is TypedConstant { Kind: TypedConstantKind.Array } typeArray) {
-                    attribute.inheritance = new INamedTypeSymbol[typeArray.Values.Length];
-                    for (int i = 0; i < attribute.inheritance.Length; i++) {
-                        if (typeArray.Values[i].Value is not INamedTypeSymbol typeSymbol) {
-                            attribute.inheritance = [];
-                            break;
-                        }
-                        attribute.inheritance[i] = typeSymbol;
-                    }
-                }
-                attribute.staticMembers = attributeData.NamedArguments.GetArgument<bool>("StaticMembers");
-            }
+        (string? name, string modifier, string? namspace, INamedTypeSymbol[] inheritance, string[] nested, bool staticMembers) attribute = (null, "public", null, [], [], false);
+        if (attributeData.NamedArguments.Length > 0) {
+            if (attributeData.NamedArguments.GetArgument<string>("Name") is string name)
+                attribute.name = name;
+            if (attributeData.NamedArguments.GetArgument<string>("Modifier") is string modifier)
+                attribute.modifier = modifier;
+            if (attributeData.NamedArguments.GetArgument<string>("Namespace") is string namspace)
+                attribute.namspace = namspace;
+            attribute.inheritance = attributeData.NamedArguments.GetArgumentArray<INamedTypeSymbol>("Inheritance");
+            attribute.nested = attributeData.NamedArguments.GetArgumentArray<string>("Nested");
+            attribute.staticMembers = attributeData.NamedArguments.GetArgument<bool>("StaticMembers");
         }
-
 
         // tracking record parameter overwrites
         SeparatedSyntaxList<ParameterSyntax> recordParameterList = targetType switch {
@@ -133,11 +126,20 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                 break;
         }
 
+        // nesting
+        foreach (string containingType in attribute.nested) {
+            builder.Append(INDENTCHAR, currentIndent);
+            builder.Append(containingType);
+            builder.Append(" {\n");
+            currentIndent += INDENTLEVEL;
+        }
+
         // summary
         {
             SyntaxTriviaList triviaList = targetType.AttributeLists[0].GetLeadingTrivia();
             foreach (SyntaxTrivia trivia in triviaList)
                 if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
+                    builder.Append(INDENTCHAR, currentIndent);
                     builder.Append("///");
                     builder.Append(documentationCommentTrivia.ToString());
                     break;
@@ -145,6 +147,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         }
 
         // class/struct declaration
+        builder.Append(INDENTCHAR, currentIndent);
         builder.Append(attribute.modifier);
         builder.Append(" interface ");
         if (attribute.name is null) {
@@ -278,19 +281,20 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append("    ///");
+                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                            builder.Append("///");
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
 
                     // attributes
                     if (methodDeclarationSyntax.AttributeLists.Count > 0) {
-                        builder.Append("    ");
+                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                         builder.Append(methodDeclarationSyntax.AttributeLists.ToString());
                         builder.Append('\n');
                     }
 
-                    builder.Append("    ");
+                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                     builder.Append(modifiers);
                     builder.Append(methodDeclarationSyntax.ReturnType.ToString());
                     builder.Append(' ');
@@ -385,19 +389,20 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append("    ///");
+                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                            builder.Append("///");
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
 
                     // attributes
                     if (propertyDeclarationSyntax.AttributeLists.Count > 0) {
-                        builder.Append("    ");
+                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                         builder.Append(propertyDeclarationSyntax.AttributeLists.ToString());
                         builder.Append('\n');
                     }
 
-                    builder.Append("    ");
+                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                     builder.Append(modifiers);
                     builder.Append(propertyDeclarationSyntax.Type.ToString());
                     builder.Append(' ');
@@ -481,19 +486,20 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append("    ///");
+                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                            builder.Append("///");
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
 
                     // attributes
                     if (indexerDeclarationSyntax.AttributeLists.Count > 0) {
-                        builder.Append("    ");
+                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                         builder.Append(indexerDeclarationSyntax.AttributeLists.ToString());
                         builder.Append('\n');
                     }
 
-                    builder.Append("    ");
+                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                     builder.Append(indexerDeclarationSyntax.Type.ToString());
                     builder.Append(' ');
                     builder.Append("this");
@@ -569,19 +575,20 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append("    ///");
+                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                            builder.Append("///");
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
 
                     // attributes
                     if (eventFieldDeclarationSyntax.AttributeLists.Count > 0) {
-                        builder.Append("    ");
+                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                         builder.Append(eventFieldDeclarationSyntax.AttributeLists.ToString());
                         builder.Append('\n');
                     }
 
-                    builder.Append("    ");
+                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                     builder.Append(modifiers);
                     builder.Append("event ");
                     builder.Append(eventFieldDeclarationSyntax.Declaration.Type.ToString());
@@ -658,19 +665,20 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append("    ///");
+                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                            builder.Append("///");
                             builder.Append(documentationCommentTrivia.ToString());
                             break;
                         }
 
                     // attributes
                     if (eventDeclarationSyntax.AttributeLists.Count > 0) {
-                        builder.Append("    ");
+                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                         builder.Append(eventDeclarationSyntax.AttributeLists.ToString());
                         builder.Append('\n');
                     }
 
-                    builder.Append("    ");
+                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                     builder.Append(modifiers);
                     builder.Append("event ");
                     builder.Append(eventDeclarationSyntax.Type.ToString());
@@ -703,7 +711,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                 if (parameter.Type == null)
                     continue;
 
-                builder.Append("    ");
+                builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
                 builder.Append(parameter.Type.ToString());
                 builder.Append(' ');
                 builder.Append(parameter.Identifier.ValueText);
@@ -712,7 +720,8 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
             // Deconstruct()
             if (!recordDeconstructOverwrittenFlag) {
-                builder.Append("    void Deconstruct(");
+                builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                builder.Append("void Deconstruct(");
                 foreach (ParameterSyntax parameter in recordParameterList) {
                     builder.Append("out ");
                     builder.Append(parameter.Type);
@@ -728,8 +737,15 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
 
         builder.Length--;
-        builder.Append('}');
-        builder.Append('\n');
+        builder.Append(INDENTCHAR, currentIndent);
+        builder.Append("}\n");
+
+        // nesting
+        for (int i = 0; i < attribute.nested.Length; i++) {
+            currentIndent -= INDENTLEVEL;
+            builder.Append(INDENTCHAR, currentIndent);
+            builder.Append("}\n");
+        }
 
         string source = builder.ToString();
 

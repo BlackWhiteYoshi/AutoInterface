@@ -94,4 +94,18 @@ internal static class Extensions {
             TypedConstant { Value: T value } => value,
             _ => default
         };
+
+    internal static T[] GetArgumentArray<T>(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name) {
+        if (arguments.GetArgument(name) is not TypedConstant { Kind: TypedConstantKind.Array } typeArray)
+            return [];
+
+        T[] result = new T[typeArray.Values.Length];
+        for (int i = 0; i < result.Length; i++) {
+            if (typeArray.Values[i].Value is not T value)
+                return [];
+            result[i] = value;
+        }
+
+        return result;
+    }
 }

@@ -151,6 +151,97 @@ public static class AttributeTests {
 
 
     [Fact]
+    public static void Nested() {
+        string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface(Nested = ["public partial interface MyWrapper"])]
+            public class Test;
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface MyWrapper {
+                public interface ITest {    }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public static void Nested_Triple() {
+        string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface(Nested = ["public partial class MyWrapper", "public readonly partial struct MyWrapper2", "public partial interface OuterInterface"])]
+            public class Test;
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial class MyWrapper {
+                public readonly partial struct MyWrapper2 {
+                    public partial interface OuterInterface {
+                        public interface ITest {            }
+                    }
+                }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public static void NestedWithMembers() {
+        string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface(Nested = ["public partial interface OuterInterface"])]
+            public class Test {
+                public int GetNumber() => 1;
+
+                public int Number => 5;
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface OuterInterface {
+                public interface ITest {
+                    int GetNumber();
+
+                    int Number { get; }
+                }
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+
+    [Fact]
     public static void StaticMembers() {
         const string input = $$"""
             using AutoInterfaceAttributes;

@@ -45,6 +45,15 @@ public static partial class Attributes {
             public Type[] Inheritance { get; init; }
 
             /// <summary>
+            /// <para>
+            /// The Classes, structs or interfaces containing the generated interface.<br />
+            /// e.g. ["public sealed partial class Example"] will wrap the interface with that expression.
+            /// </para>
+            /// <para>Default is Array.Empty</para>
+            /// </summary>
+            public string[] Nested { get; init; }
+
+            /// <summary>
             /// <para>If enabled, static members get accepted and are generating "static abstract" members.</para>
             /// <para>Default is false</para>
             /// </summary>
