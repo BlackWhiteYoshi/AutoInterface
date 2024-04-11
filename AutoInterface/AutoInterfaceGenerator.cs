@@ -106,18 +106,9 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     break; // global namespace -> append nothing
 
                 builder.Append("namespace ");
-                AppendNamespace(builder, namespaceSymbol.ContainingNamespace);
+                builder.AppendNamespace(namespaceSymbol.ContainingNamespace);
                 builder.Append(namespaceSymbol.Name);
                 builder.Append(";\n\n");
-
-                static void AppendNamespace(StringBuilder builder, INamespaceSymbol namespaceSymbol) {
-                    if (namespaceSymbol.Name == string.Empty)
-                        return;
-
-                    AppendNamespace(builder, namespaceSymbol.ContainingNamespace);
-                    builder.Append(namespaceSymbol.Name);
-                    builder.Append('.');
-                }
                 break;
             default:
                 builder.Append("namespace ");
@@ -757,10 +748,16 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         }
         else
             builder.Append(attribute.name);
+
         builder.Append('_');
+        builder.AppendNamespace(targetSymbol.ContainingNamespace);
+        builder.AppendContainingTypes(targetSymbol.ContainingType);
         builder.Append(targetSymbol.Name);
+        builder.AppendParameterList(targetSymbol);
+
         builder.Append('_');
         builder.Append(Path.GetFileName(targetType.SyntaxTree.FilePath));
+
         builder.Append(".g.cs");
         string hintName = builder.ToString();
 

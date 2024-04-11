@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
+using System.Text;
 
 namespace AutoInterface;
 
@@ -95,6 +96,13 @@ internal static class Extensions {
             _ => default
         };
 
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="arguments"></param>
+    /// <param name="name"></param>
+    /// <returns></returns>
     internal static T[] GetArgumentArray<T>(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name) {
         if (arguments.GetArgument(name) is not TypedConstant { Kind: TypedConstantKind.Array } typeArray)
             return [];
@@ -107,5 +115,53 @@ internal static class Extensions {
         }
 
         return result;
+    }
+
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="namespaceSymbol"></param>
+    internal static void AppendNamespace(this StringBuilder builder, INamespaceSymbol namespaceSymbol) {
+        if (namespaceSymbol.Name == string.Empty)
+            return;
+
+        AppendNamespace(builder, namespaceSymbol.ContainingNamespace);
+        builder.Append(namespaceSymbol.Name);
+        builder.Append('.');
+    }
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="namespaceSymbol"></param>
+    internal static void AppendContainingTypes(this StringBuilder builder, INamedTypeSymbol? containingType) {
+        if (containingType == null)
+            return;
+        
+        builder.AppendContainingTypes(containingType.ContainingType);
+        builder.Append(containingType.Name);
+        builder.Append('.');
+    }
+
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="builder"></param>
+    internal static void AppendParameterList(this StringBuilder builder, INamedTypeSymbol typeSymbol) {
+        if (typeSymbol.TypeParameters.Length == 0)
+            return;
+
+        builder.Append('{');
+
+        builder.Append(typeSymbol.TypeParameters[0].Name);
+        for (int i = 1; i < typeSymbol.TypeParameters.Length; i++) {
+            builder.Append(typeSymbol.TypeParameters[i].Name);
+            builder.Append(", ");
+        }
+
+        builder.Append('}');
     }
 }
