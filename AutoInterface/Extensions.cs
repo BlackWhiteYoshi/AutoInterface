@@ -97,7 +97,8 @@ internal static class Extensions {
         };
 
     /// <summary>
-    /// TODO
+    /// <para>Finds the argument with the given name and returns it's value as array.</para>
+    /// <para>If not found or any value is not castable, it returns an empty array.</para>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="arguments"></param>
@@ -119,7 +120,11 @@ internal static class Extensions {
 
 
     /// <summary>
-    /// TODO
+    /// <para>
+    /// Appends the name of the given symbol prefixed with the names of its containing namespaces with trailing dot:
+    /// "namespace1.namespace2.namespace3...namespaceN."
+    /// </para>
+    /// <para>If the given namespace is string.Empty, nothing is appended.</para>
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="namespaceSymbol"></param>
@@ -133,10 +138,14 @@ internal static class Extensions {
     }
 
     /// <summary>
-    /// TODO
+    /// <para>
+    /// Appends the name of the given type prefixed with the names of its containing types with trailing dot:<br />
+    /// "type1.type2.typ3...typeN."
+    /// </para>
+    /// <para>if the given type is null, nothing is appended.</para>
     /// </summary>
     /// <param name="builder"></param>
-    /// <param name="namespaceSymbol"></param>
+    /// <param name="containingType"></param>
     internal static void AppendContainingTypes(this StringBuilder builder, INamedTypeSymbol? containingType) {
         if (containingType == null)
             return;
@@ -147,7 +156,11 @@ internal static class Extensions {
     }
 
     /// <summary>
-    /// TODO
+    /// <para>
+    /// Appends the typeparameters of the given type sourrounded by curly braces:<br />
+    /// "{T1, T2, T3, ..., TN}"
+    /// </para>
+    /// <para>if the given symbol has no typeParameters, nothing is appended.</para>
     /// </summary>
     /// <param name="builder"></param>
     internal static void AppendParameterList(this StringBuilder builder, INamedTypeSymbol typeSymbol) {
