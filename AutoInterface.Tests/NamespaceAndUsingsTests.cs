@@ -25,7 +25,7 @@ public static class NamespaceAndUsingsTests {
 
             namespace MyCode.Nested;
 
-            public interface ITest {
+            public partial interface ITest {
                 void SomeMethod();
             }
 
@@ -65,7 +65,7 @@ public static class NamespaceAndUsingsTests {
 
             namespace MyCode.Nested;
 
-            public interface ITest {
+            public partial interface ITest {
                 void SomeMethod();
             }
 

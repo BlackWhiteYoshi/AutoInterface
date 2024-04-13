@@ -25,7 +25,7 @@ public static class AttributeTests {
 
             namespace MyCode;
 
-            public interface {{name}} {}
+            public partial interface {{name}} {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -81,7 +81,7 @@ public static class AttributeTests {
 
             namespace {{namspace}};
 
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -103,7 +103,7 @@ public static class AttributeTests {
         string expected = $$"""
             {{Shared.GENERATED_SOURCE_HEAD}}
 
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -143,7 +143,7 @@ public static class AttributeTests {
 
             namespace MyCode;
 
-            public interface ITest {{result}}{}
+            public partial interface ITest {{result}}{}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -169,7 +169,7 @@ public static class AttributeTests {
             namespace MyCode;
 
             public partial interface MyWrapper {
-                public interface ITest {    }
+                public partial interface ITest {    }
             }
 
             """;
@@ -197,7 +197,7 @@ public static class AttributeTests {
             public partial class MyWrapper {
                 public readonly partial struct MyWrapper2 {
                     public partial interface OuterInterface {
-                        public interface ITest {            }
+                        public partial interface ITest {            }
                     }
                 }
             }
@@ -229,7 +229,7 @@ public static class AttributeTests {
             namespace MyCode;
 
             public partial interface OuterInterface {
-                public interface ITest {
+                public partial interface ITest {
                     int GetNumber();
 
                     int Number { get; }
@@ -261,7 +261,7 @@ public static class AttributeTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 static abstract int GetNumber();
             }
 

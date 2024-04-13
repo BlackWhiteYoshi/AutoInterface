@@ -21,7 +21,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -55,7 +55,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int OneProp { set; }
             }
 
@@ -86,7 +86,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int MTest();
             }
 
@@ -114,7 +114,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 T? MTest<T>() where T : INumber<T>;
             }
 
@@ -142,7 +142,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int MTest(int number, string str);
             }
 
@@ -173,7 +173,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -209,7 +209,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -242,7 +242,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 Task TestAsync();
             }
 
@@ -270,7 +270,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 global::System.Collections.Generic.List<int> NameTest();
             }
 
@@ -298,7 +298,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int ExplicitTest();
             }
 
@@ -327,7 +327,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -365,7 +365,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -407,7 +407,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int PTest { get; }
             }
 
@@ -438,7 +438,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -474,7 +474,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -507,7 +507,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int TestGet { get; }
             }
 
@@ -535,7 +535,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int TestSet { set; }
             }
 
@@ -563,7 +563,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int TestGetSet { get; set; }
             }
 
@@ -591,7 +591,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int TestInit { init; }
             }
 
@@ -619,7 +619,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int TestGetInit { get; init; }
             }
 
@@ -647,7 +647,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 global::System.Collections.Generic.List<int> NameTest { get; }
             }
 
@@ -675,7 +675,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int ExplicitTest { get; }
             }
 
@@ -704,7 +704,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -750,7 +750,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -802,7 +802,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITestGet {
+            public partial interface ITestGet {
                 int this[int i] { get; }
             }
 
@@ -836,7 +836,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITestGet {
+            public partial interface ITestGet {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -874,7 +874,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITestGet {
+            public partial interface ITestGet {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -909,7 +909,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITestGet {
+            public partial interface ITestGet {
                 int this[int i] { get; }
             }
 
@@ -940,7 +940,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITestSet {
+            public partial interface ITestSet {
                 int this[int i] { set; }
             }
 
@@ -971,7 +971,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITestGetSet {
+            public partial interface ITestGetSet {
                 int this[int i] { get; set; }
             }
 
@@ -1002,7 +1002,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITestExplicit {
+            public partial interface ITestExplicit {
                 int this[int i] { get; set; }
             }
 
@@ -1034,7 +1034,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface INoTest {}
+            public partial interface INoTest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -1099,7 +1099,7 @@ public static class MemberTests {
 
                 namespace MyCode;
 
-                public interface ITestGet {
+                public partial interface ITestGet {
                     /// <summary>
                     /// my description
                     /// </summary>
@@ -1115,7 +1115,7 @@ public static class MemberTests {
 
                 namespace MyCode;
 
-                public interface ITestSet {
+                public partial interface ITestSet {
                     int this[int i] { set; }
                 }
 
@@ -1128,7 +1128,7 @@ public static class MemberTests {
 
                 namespace MyCode;
 
-                public interface ITestGetSet {
+                public partial interface ITestGetSet {
                     int this[int i] { get; set; }
                 }
 
@@ -1141,7 +1141,7 @@ public static class MemberTests {
 
                 namespace MyCode;
 
-                public interface ITestExplicit {
+                public partial interface ITestExplicit {
                     int this[int i] { get; set; }
                 }
 
@@ -1154,7 +1154,7 @@ public static class MemberTests {
 
                 namespace MyCode;
 
-                public interface INoTest {}
+                public partial interface INoTest {}
 
                 """;
             Assert.Equal(expected, sourceText[4]);
@@ -1186,7 +1186,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 event Action ATest;
             }
 
@@ -1217,7 +1217,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -1253,7 +1253,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -1287,7 +1287,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -1319,7 +1319,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -1355,7 +1355,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 event Action ATest;
             }
 
@@ -1386,7 +1386,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -1422,7 +1422,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -1455,7 +1455,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 event Action ExplicitTest;
             }
 
@@ -1484,7 +1484,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -1518,7 +1518,7 @@ public static class MemberTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>

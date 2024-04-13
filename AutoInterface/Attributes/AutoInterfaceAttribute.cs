@@ -27,7 +27,7 @@ public static partial class Attributes {
 
             /// <summary>
             /// <para>The modifier(s) for the interface.</para>
-            /// <para>Deault is "public"</para>
+            /// <para>Deault is "public partial"</para>
             /// </summary>
             public string Modifier { get; init; }
 

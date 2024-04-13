@@ -26,7 +26,7 @@ public static class MultipleAutoInterfaceAttributesTests {
 
                 namespace MyCode;
 
-                public interface ITest1 {
+                public partial interface ITest1 {
                     int GetNumber();
                 }
 
@@ -39,7 +39,7 @@ public static class MultipleAutoInterfaceAttributesTests {
 
                 namespace MyCode;
 
-                public interface ITest2 {
+                public partial interface ITest2 {
                     int GetNumber();
                 }
 
@@ -78,7 +78,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public interface ITest1 {
+                public partial interface ITest1 {
                     int GetNumber();
                 }
 
@@ -94,7 +94,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 /// <summary>
                 /// my description
                 /// </summary>
-                public interface ITest2 {
+                public partial interface ITest2 {
                     int GetNumber();
                 }
 
@@ -128,7 +128,7 @@ public static class MultipleAutoInterfaceAttributesTests {
 
                 namespace MyCode;
 
-                public interface ITest1 {
+                public partial interface ITest1 {
                     int GetNumber();
                 }
 
@@ -141,7 +141,7 @@ public static class MultipleAutoInterfaceAttributesTests {
 
                 namespace MyCode;
 
-                public interface ITest2 {
+                public partial interface ITest2 {
                     string GetString();
                 }
 

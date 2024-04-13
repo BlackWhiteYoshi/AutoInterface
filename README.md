@@ -34,7 +34,7 @@ public class Example : IExample {
 
 using AutoInterfaceAttributes;
 
-public interface IExample {
+public partial interface IExample {
     int Number { get; }
 
     /// <summary>
@@ -88,7 +88,7 @@ public struct Point {
 
 using AutoInterfaceAttributes;
 
-public interface IPoint {
+public partial interface IPoint {
     int X { get; }
 
     int Y { get; }
@@ -124,7 +124,7 @@ public sealed class FullExample {
 
 using AutoInterfaceAttributes;
 
-public interface IFullExample {
+public partial interface IFullExample {
     void SomeMethod();
 
     int SomeProperty { get; init; }
@@ -164,7 +164,7 @@ public sealed class ExplicitExample : IExplicitExample {
 
 using AutoInterfaceAttributes;
 
-public interface IExplicitExample {
+public partial interface IExplicitExample {
     void SomeMethod();
 
     int SomeProperty { get; init; }
@@ -201,7 +201,7 @@ public sealed class MultipleExample : IMultipleExample1, IMultipleExample2 {
 
 using AutoInterfaceAttributes;
 
-public interface IMultipleExample1 {
+public partial interface IMultipleExample1 {
     void SomeMethod();
 
     int PropertyFirst { get; set; }
@@ -216,7 +216,7 @@ public interface IMultipleExample1 {
 
 using AutoInterfaceAttributes;
 
-public interface IMultipleExample2 {
+public partial interface IMultipleExample2 {
     void SomeMethod();
 
     string PropertySecond { get; set; }
@@ -253,7 +253,7 @@ using AutoInterfaceAttributes;
 /// <summary>
 /// my class description
 /// </summary>
-public interface ISummaryExample {
+public partial interface ISummaryExample {
     /// <summary>
     /// some method description
     /// </summary>
@@ -282,7 +282,7 @@ public sealed class GenericExample<T> {
 
 using AutoInterfaceAttributes;
 
-public interface IGenericExample<T> {
+public partial interface IGenericExample<T> {
     T Identity(T parameter);
 }
 ```
@@ -313,7 +313,7 @@ public sealed class Example;
 
 using AutoInterfaceAttributes;
 
-public interface NewName {}
+public partial interface NewName {}
 ```
 
 
@@ -321,14 +321,14 @@ public interface NewName {}
 - ### Modifier
 
 Type: string  
-Default: "public"
+Default: "public partial"
 
-If you want another visible modifier or make the interface partial or unsafe, you can do this here.
+If you want another visible modifier or make the interface non-partial or unsafe, you can do this here.
 
 ```csharp
 using AutoInterfaceAttributes;
 
-[AutoInterface(Modifier = "internal partial")]
+[AutoInterface(Modifier = "internal")]
 public sealed class Example;
 ```
 
@@ -340,7 +340,7 @@ public sealed class Example;
 
 using AutoInterfaceAttributes;
 
-internal partial interface IExample {}
+internal interface IExample {}
 ```
 
 
@@ -372,7 +372,7 @@ using AutoInterfaceAttributes;
 
 namespace MyApp.Utils;
 
-public interface IExample {}
+public partial interface IExample {}
 ```
 
 
@@ -390,7 +390,7 @@ using AutoInterfaceAttributes;
 [AutoInterface(Inheritance = [typeof(ICore)])]
 public sealed class Example;
 
-public interface ICore { ... }
+public partial interface ICore { ... }
 ```
 
 ```csharp
@@ -401,7 +401,7 @@ public interface ICore { ... }
 
 using AutoInterfaceAttributes;
 
-public interface IExample : ICore {}
+public partial interface IExample : ICore {}
 ```
 
 
@@ -432,7 +432,7 @@ using AutoInterfaceAttributes;
 
 public partial class MyWrapper {
     public partial interface OuterInterface {
-        public interface IExample {
+        public partial interface IExample {
             void SomeMethod();
         }
     }
@@ -467,7 +467,7 @@ public sealed class Example {
 
 using AutoInterfaceAttributes;
 
-public interface IExample {
+public partial interface IExample {
     static abstract void SomeMethod();
 }
 ```
@@ -496,7 +496,7 @@ public sealed class Example {
 
 using AutoInterfaceAttributes;
 
-public interface IExample {}
+public partial interface IExample {}
 ```
 
 
@@ -545,7 +545,7 @@ namespace System.Collections {
 using Generic; // <-- refers to "Generic"
 using AutoInterfaceAttributes;
 
-public interface IExample {}
+public partial interface IExample {}
 ```
 
 You also should not use not fully-qualified using-statements in the first place, because they can be ambiguous.

@@ -29,7 +29,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {}
+            public partial interface ITest : MyCode.IBase {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -59,7 +59,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestMethod();
             }
 
@@ -91,7 +91,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestMethod();
             }
 
@@ -123,7 +123,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestMethod();
             }
 
@@ -155,7 +155,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestMethod();
             }
 
@@ -187,7 +187,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestMethod();
             }
 
@@ -224,7 +224,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {}
+            public partial interface ITest : MyCode.IBase {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -254,7 +254,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestProperty { get; }
             }
 
@@ -286,7 +286,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestProperty { get; }
             }
 
@@ -318,7 +318,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestProperty { get; }
             }
 
@@ -350,7 +350,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int TestProperty { get; }
             }
 
@@ -387,7 +387,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {}
+            public partial interface ITest : MyCode.IBase {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -417,7 +417,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int this[int i] { get; }
             }
 
@@ -449,7 +449,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int this[int i] { get; }
             }
 
@@ -481,7 +481,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int this[int i] { get; }
             }
 
@@ -513,7 +513,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 int this[int i] { get; }
             }
 
@@ -550,7 +550,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {}
+            public partial interface ITest : MyCode.IBase {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -580,7 +580,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 event Action eventTest;
             }
 
@@ -612,7 +612,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 event Action eventTest;
             }
 
@@ -649,7 +649,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {}
+            public partial interface ITest : MyCode.IBase {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -679,7 +679,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 event Action EventTest;
             }
 
@@ -711,7 +711,7 @@ public static class InheritanceTests {
 
             namespace MyCode;
 
-            public interface ITest : MyCode.IBase {
+            public partial interface ITest : MyCode.IBase {
                 event Action EventTest;
             }
 

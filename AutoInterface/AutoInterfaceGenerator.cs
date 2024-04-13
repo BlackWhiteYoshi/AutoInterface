@@ -10,7 +10,6 @@ namespace AutoInterface;
 public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
     private readonly ObjectPool<StringBuilder> stringBuilderPool = new DefaultObjectPoolProvider().CreateStringBuilderPool(initialCapacity: 8192, maximumRetainedCapacity: 1024 * 1024);
 
-
     public void Initialize(IncrementalGeneratorInitializationContext context) {
         // register attribute marker
         context.RegisterPostInitializationOutput(static (IncrementalGeneratorPostInitializationContext context) => {
@@ -33,7 +32,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         context.RegisterSourceOutput(interfaceTypeProvider, Execute);
     }
 
-
     private void Execute(SourceProductionContext context, ClassWithAttributeData provider) {
         const char INDENTCHAR = ' ';
         const int INDENTLEVEL = 4;
@@ -43,7 +41,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         INamedTypeSymbol targetSymbol = provider.TypeSymbol;
         AttributeData attributeData = provider.AttributeData;
 
-        (string? name, string modifier, string? namspace, INamedTypeSymbol[] inheritance, string[] nested, bool staticMembers) attribute = (null, "public", null, [], [], false);
+        (string? name, string modifier, string? namspace, INamedTypeSymbol[] inheritance, string[] nested, bool staticMembers) attribute = (null, "public partial", null, [], [], false);
         if (attributeData.NamedArguments.Length > 0) {
             if (attributeData.NamedArguments.GetArgument<string>("Name") is string name)
                 attribute.name = name;

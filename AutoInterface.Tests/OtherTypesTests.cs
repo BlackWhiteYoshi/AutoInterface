@@ -23,7 +23,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest<T> {
+            public partial interface ITest<T> {
                 T? MTest();
             }
 
@@ -52,7 +52,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
             }
 
@@ -80,7 +80,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
             }
 
@@ -109,7 +109,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
             }
 
@@ -137,7 +137,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
 
                 string Name { get; init; }
@@ -169,7 +169,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
             }
 
@@ -198,7 +198,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
             }
 
@@ -226,7 +226,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
 
                 string Name { get; set; }
@@ -258,7 +258,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; init; }
             }
 
@@ -286,7 +286,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Number { get; }
 
                 void Deconstruct(out int Number);
@@ -316,7 +316,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 void Deconstruct(out int Number);
             }
 
@@ -344,7 +344,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 void Deconstruct(out int Number, out int Number2);
             }
 
@@ -375,7 +375,7 @@ public static class OtherTypesTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 int Deconstruct(out int a);
 
                 int Number { get; init; }

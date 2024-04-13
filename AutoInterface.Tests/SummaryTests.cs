@@ -27,7 +27,7 @@ public static class SummaryTests {
             /// <summary>
             /// my description
             /// </summary>
-            public interface ITest {}
+            public partial interface ITest {}
 
             """;
         Assert.Equal(expected, sourceText);
@@ -61,7 +61,7 @@ public static class SummaryTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -115,7 +115,7 @@ public static class SummaryTests {
 
             namespace MyCode;
 
-            public interface ITest {
+            public partial interface ITest {
                 void SomeMethod();
 
                 int SomeProperty { get; init; }
