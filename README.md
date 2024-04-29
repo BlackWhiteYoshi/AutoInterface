@@ -64,7 +64,7 @@ AutoInterface supports:
 
 
 <br></br>
-## Exmples
+## Examples
 
 ### AutoInterfaceAttribute on struct
 
