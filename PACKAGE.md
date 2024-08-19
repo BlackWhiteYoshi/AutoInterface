@@ -59,6 +59,7 @@ AutoInterface supports:
   * interface inheritance
   * interface nesting
   * static members as static abstract
+  * access modifier
   * ignore specific members
 
 For documentation or sourcecode see [github.com/BlackWhiteYoshi/AutoInterface](https://github.com/BlackWhiteYoshi/AutoInterface).

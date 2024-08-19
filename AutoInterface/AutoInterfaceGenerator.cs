@@ -15,6 +15,12 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
         context.RegisterPostInitializationOutput(static (IncrementalGeneratorPostInitializationContext context) => {
             context.AddSource("AutoInterfaceAttribute.g.cs", Attributes.AutoInterfaceAttribute);
             context.AddSource("IgnoreAutoInterfaceAttribute.g.cs", Attributes.IgnoreAutoInterfaceAttribute);
+
+            context.AddSource("AutoInterfaceVisibilityPublicAttribute.g.cs", Attributes.AutoInterfaceVisibilityPublicAttribute);
+            context.AddSource("AutoInterfaceVisibilityInternalAttribute.g.cs", Attributes.AutoInterfaceVisibilityInternalAttribute);
+            context.AddSource("AutoInterfaceVisibilityProtectedAttribute.g.cs", Attributes.AutoInterfaceVisibilityProtectedAttribute);
+            context.AddSource("AutoInterfaceVisibilityProtectedInternalAttribute.g.cs", Attributes.AutoInterfaceVisibilityProtectedInternalAttribute);
+            context.AddSource("AutoInterfaceVisibilityPrivateProtectedAttribute.g.cs", Attributes.AutoInterfaceVisibilityPrivateProtectedAttribute);
         });
 
         // all classes/structs with AutoInterfaceAttribute
@@ -284,6 +290,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     }
 
                     builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                    builder.AppendAccessModifier(member);
                     builder.Append(modifiers);
                     builder.Append(methodDeclarationSyntax.ReturnType.ToString());
                     builder.Append(' ');
@@ -392,6 +399,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     }
 
                     builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                    builder.AppendAccessModifier(member);
                     builder.Append(modifiers);
                     builder.Append(propertyDeclarationSyntax.Type.ToString());
                     builder.Append(' ');
@@ -489,6 +497,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     }
 
                     builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                    builder.AppendAccessModifier(member);
                     builder.Append(indexerDeclarationSyntax.Type.ToString());
                     builder.Append(' ');
                     builder.Append("this");
@@ -578,6 +587,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     }
 
                     builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                    builder.AppendAccessModifier(member);
                     builder.Append(modifiers);
                     builder.Append("event ");
                     builder.Append(eventFieldDeclarationSyntax.Declaration.Type.ToString());
@@ -668,6 +678,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     }
 
                     builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL);
+                    builder.AppendAccessModifier(member);
                     builder.Append(modifiers);
                     builder.Append("event ");
                     builder.Append(eventDeclarationSyntax.Type.ToString());

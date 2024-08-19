@@ -177,4 +177,29 @@ internal static class Extensions {
 
         builder.Append('}');
     }
+
+    /// <summary>
+    /// <para>Appends a access modifier when the corresponding attribute is present:</para>
+    /// <para>
+    /// [AutoInterfaceVisibilityPublic] => "public"<br />
+    /// [AutoInterfaceVisibilityInternal] => "internal"<br />
+    /// [AutoInterfaceVisibilityProtected] => "protected"<br />
+    /// [AutoInterfaceVisibilityProtectedInternal] => "protected internal"<br />
+    /// [AutoInterfaceVisibilityPrivateProtected] => "private protected"
+    /// </para>
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="member"></param>
+    internal static void AppendAccessModifier(this StringBuilder builder, MemberDeclarationSyntax member) {
+        if (member.GetAttribute("AutoInterfaceVisibilityPublic") is not null)
+            builder.Append("public ");
+        if (member.GetAttribute("AutoInterfaceVisibilityInternal") is not null)
+            builder.Append("internal ");
+        if (member.GetAttribute("AutoInterfaceVisibilityProtected") is not null)
+            builder.Append("protected ");
+        if (member.GetAttribute("AutoInterfaceVisibilityProtectedInternal") is not null)
+            builder.Append("protected internal ");
+        if (member.GetAttribute("AutoInterfaceVisibilityPrivateProtected") is not null)
+            builder.Append("private protected ");
+    }
 }

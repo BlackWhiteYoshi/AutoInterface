@@ -268,4 +268,327 @@ public static class AttributeTests {
             """;
         Assert.Equal(expected, sourceText);
     }
+
+
+
+    [Fact]
+    public static void AutoInterfaceVisibilityPublic() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test : ITest {
+                [AutoInterfaceVisibilityPublic]
+                public int MTest() => 1;
+                
+                [AutoInterfaceVisibilityPublic]
+                public int PTest => 1;
+                
+                [AutoInterfaceVisibilityPublic]
+                public int this[int i] {
+                    get => i;
+                }
+                
+                [AutoInterfaceVisibilityPublic]
+                public event Action aTest;
+                
+                [AutoInterfaceVisibilityPublic]
+                public event Action ATest { add { } remove { } }
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        const string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest {
+                [AutoInterfaceVisibilityPublic]
+                public int MTest();
+
+                [AutoInterfaceVisibilityPublic]
+                public int PTest { get; }
+
+                [AutoInterfaceVisibilityPublic]
+                public int this[int i] { get; }
+
+                [AutoInterfaceVisibilityPublic]
+                public event Action aTest;
+
+                [AutoInterfaceVisibilityPublic]
+                public event Action ATest;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public static void AutoInterfaceVisibilityInternal() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test : ITest {
+                [AutoInterfaceVisibilityInternal]
+                int ITest.MTest() => 1;
+                
+                [AutoInterfaceVisibilityInternal]
+                int ITest.PTest => 1;
+                
+                [AutoInterfaceVisibilityInternal]
+                int ITest.this[int i] {
+                    get => i;
+                }
+                
+                [AutoInterfaceVisibilityInternal]
+                public event Action aTest;
+                
+                [AutoInterfaceVisibilityInternal]
+                event Action ITest.ATest { add { } remove { } }
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        const string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest {
+                [AutoInterfaceVisibilityInternal]
+                internal int MTest();
+
+                [AutoInterfaceVisibilityInternal]
+                internal int PTest { get; }
+
+                [AutoInterfaceVisibilityInternal]
+                internal int this[int i] { get; }
+
+                [AutoInterfaceVisibilityInternal]
+                internal event Action aTest;
+
+                [AutoInterfaceVisibilityInternal]
+                internal event Action ATest;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public static void AutoInterfaceVisibilityProtected() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test : ITest {
+                [AutoInterfaceVisibilityProtected]
+                int ITest.MTest() => 1;
+                
+                [AutoInterfaceVisibilityProtected]
+                int ITest.PTest => 1;
+                
+                [AutoInterfaceVisibilityProtected]
+                int ITest.this[int i] {
+                    get => i;
+                }
+                
+                [AutoInterfaceVisibilityProtected]
+                public event Action aTest;
+                
+                [AutoInterfaceVisibilityProtected]
+                event Action ITest.ATest { add { } remove { } }
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        const string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest {
+                [AutoInterfaceVisibilityProtected]
+                protected int MTest();
+
+                [AutoInterfaceVisibilityProtected]
+                protected int PTest { get; }
+
+                [AutoInterfaceVisibilityProtected]
+                protected int this[int i] { get; }
+
+                [AutoInterfaceVisibilityProtected]
+                protected event Action aTest;
+
+                [AutoInterfaceVisibilityProtected]
+                protected event Action ATest;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public static void AutoInterfaceVisibilityProtectedInternal() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test : ITest {
+                [AutoInterfaceVisibilityProtectedInternal]
+                int ITest.MTest() => 1;
+                
+                [AutoInterfaceVisibilityProtectedInternal]
+                int ITest.PTest => 1;
+                
+                [AutoInterfaceVisibilityProtectedInternal]
+                int ITest.this[int i] {
+                    get => i;
+                }
+                
+                [AutoInterfaceVisibilityProtectedInternal]
+                public event Action aTest;
+                
+                [AutoInterfaceVisibilityProtectedInternal]
+                event Action ITest.ATest { add { } remove { } }
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        const string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest {
+                [AutoInterfaceVisibilityProtectedInternal]
+                protected internal int MTest();
+
+                [AutoInterfaceVisibilityProtectedInternal]
+                protected internal int PTest { get; }
+
+                [AutoInterfaceVisibilityProtectedInternal]
+                protected internal int this[int i] { get; }
+
+                [AutoInterfaceVisibilityProtectedInternal]
+                protected internal event Action aTest;
+
+                [AutoInterfaceVisibilityProtectedInternal]
+                protected internal event Action ATest;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public static void AutoInterfaceVisibilityPrivateProtected() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test : ITest {
+                [AutoInterfaceVisibilityPrivateProtected]
+                int ITest.MTest() => 1;
+                
+                [AutoInterfaceVisibilityPrivateProtected]
+                int ITest.PTest => 1;
+                
+                [AutoInterfaceVisibilityPrivateProtected]
+                int ITest.this[int i] {
+                    get => i;
+                }
+                
+                [AutoInterfaceVisibilityPrivateProtected]
+                public event Action aTest;
+                
+                [AutoInterfaceVisibilityPrivateProtected]
+                event Action ITest.ATest { add { } remove { } }
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        const string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest {
+                [AutoInterfaceVisibilityPrivateProtected]
+                private protected int MTest();
+
+                [AutoInterfaceVisibilityPrivateProtected]
+                private protected int PTest { get; }
+
+                [AutoInterfaceVisibilityPrivateProtected]
+                private protected int this[int i] { get; }
+
+                [AutoInterfaceVisibilityPrivateProtected]
+                private protected event Action aTest;
+
+                [AutoInterfaceVisibilityPrivateProtected]
+                private protected event Action ATest;
+            }
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
+
+    [Fact]
+    public static void IgnoreAutoInterface() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+            
+            namespace MyCode;
+            
+            [AutoInterface]
+            public class Test : ITest {
+                [IgnoreAutoInterface]
+                int ITest.MTest() => 1;
+                
+                [IgnoreAutoInterface]
+                int ITest.PTest => 1;
+                
+                [IgnoreAutoInterface]
+                int ITest.this[int i] {
+                    get => i;
+                }
+                
+                [IgnoreAutoInterface]
+                event Action ITest.aTest;
+                
+                [IgnoreAutoInterface]
+                event Action ITest.ATest { add { } remove { } }
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        const string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest {}
+
+            """;
+        Assert.Equal(expected, sourceText);
+    }
 }
