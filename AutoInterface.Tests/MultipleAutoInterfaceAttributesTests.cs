@@ -7,9 +7,9 @@ public static class MultipleAutoInterfaceAttributesTests {
     public static void TwoAutoInterfaceAttributes() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Name = "ITest1")]
             [AutoInterface(Name = "ITest2")]
             public class Test {
@@ -52,10 +52,10 @@ public static class MultipleAutoInterfaceAttributesTests {
     public static void TwoAutoInterfaceAttributes_Summary() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
-            
+
+
             /// <summary>
             /// my description
             /// </summary>
@@ -74,7 +74,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 {{Shared.GENERATED_SOURCE_HEAD}}
 
                 namespace MyCode;
-                
+
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -90,7 +90,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 {{Shared.GENERATED_SOURCE_HEAD}}
 
                 namespace MyCode;
-                
+
                 /// <summary>
                 /// my description
                 /// </summary>
@@ -107,9 +107,9 @@ public static class MultipleAutoInterfaceAttributesTests {
     public static void TwoAutoInterfaceAttributes_Explicit() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Name = "ITest1")]
             [AutoInterface(Name = "ITest2")]
             public class Test {

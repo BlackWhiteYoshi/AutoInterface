@@ -7,9 +7,9 @@ public static class OtherTypesTests {
     public static void Generic() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test<T> {
                 public T? MTest() => default;
@@ -36,9 +36,9 @@ public static class OtherTypesTests {
     public static void Struct() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public struct Test {
                 public int Number { get; init; }
@@ -64,9 +64,9 @@ public static class OtherTypesTests {
     public static void Record() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record Test {
                 public int Number { get; init; }
@@ -93,9 +93,9 @@ public static class OtherTypesTests {
     public static void RecordClass() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record class Test {
                 public int Number { get; init; }
@@ -121,9 +121,9 @@ public static class OtherTypesTests {
     public static void RecordClassParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record class Test(string Name) {
                 public int Number { get; init; }
@@ -153,9 +153,9 @@ public static class OtherTypesTests {
     public static void RecordClassEmptyParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record class Test() {
                 public int Number { get; init; }
@@ -182,9 +182,9 @@ public static class OtherTypesTests {
     public static void RecordStruct() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record struct Test {
                 public int Number { get; init; }
@@ -210,9 +210,9 @@ public static class OtherTypesTests {
     public static void RecordStructParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record struct Test(string Name) {
                 public int Number { get; init; }
@@ -242,9 +242,9 @@ public static class OtherTypesTests {
     public static void RecordStructEmptyParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record struct Test() {
                 public int Number { get; init; }
@@ -270,9 +270,9 @@ public static class OtherTypesTests {
     public static void RecordOverwriteProperty() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record Test(int Number) {
                 public int Number { get; } = Number;
@@ -300,9 +300,9 @@ public static class OtherTypesTests {
     public static void RecordOverwriteField() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record Test(int Number) {
                 private int Number = Number;
@@ -328,9 +328,9 @@ public static class OtherTypesTests {
     public static void RecordOverwriteMultipleFields() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record Test(int Number, int Number2) {
                 private int Number = Number, Number2 = Number2;
@@ -356,9 +356,9 @@ public static class OtherTypesTests {
     public static void RecordOverwriteDeconstrcut() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public record Test(int Number) {
                 public int Deconstruct(out int a) {

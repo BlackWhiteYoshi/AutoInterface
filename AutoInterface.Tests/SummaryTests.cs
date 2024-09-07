@@ -7,9 +7,9 @@ public static class SummaryTests {
     public static void Summary() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             /// <summary>
             /// my description
             /// </summary>
@@ -37,9 +37,9 @@ public static class SummaryTests {
     public static void Summary_Method() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -81,9 +81,9 @@ public static class SummaryTests {
     public static void Summary_PreProcessorDirective() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 #region
@@ -93,15 +93,15 @@ public static class SummaryTests {
                 #region
                 public int SomeProperty { get; init; }
                 #endregion
-                
+
                 #region
                 public int this[int i] => i;
                 #endregion
-                
+
                 #region
                 public event Action? someEvent;
                 #endregion
-                
+
                 #region
                 public event Action SomeEvent { add { } remove { } }
                 #endregion

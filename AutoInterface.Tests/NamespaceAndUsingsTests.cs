@@ -7,7 +7,7 @@ public static class NamespaceAndUsingsTests {
     public static void NestedNamespace() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode {
                 namespace Nested {
                     [AutoInterface]
@@ -37,7 +37,7 @@ public static class NamespaceAndUsingsTests {
     public static void NestedUsings() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode {
                 using A;
                 namespace Nested {

@@ -7,9 +7,9 @@ public static class MemberTests {
     public static void NoMembers() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test { }
 
@@ -31,9 +31,9 @@ public static class MemberTests {
     public static void NoInterfacing() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 internal void SomeMethod() { }
@@ -70,9 +70,9 @@ public static class MemberTests {
     public static void Method() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int MTest() => 1;
@@ -98,9 +98,9 @@ public static class MemberTests {
     public static void Method_Generic() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public T? MTest<T>() where T : INumber<T> => default;
@@ -126,9 +126,9 @@ public static class MemberTests {
     public static void Method_Parameter() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int MTest(int number, string str) => 1;
@@ -154,9 +154,9 @@ public static class MemberTests {
     public static void Method_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -188,9 +188,9 @@ public static class MemberTests {
     public static void Method_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -226,9 +226,9 @@ public static class MemberTests {
     public static void Method_Async() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public async Task TestAsync() => Task.CompletedTask;
@@ -254,9 +254,9 @@ public static class MemberTests {
     public static void Method_FullName() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public global::System.Collections.Generic.List<int> NameTest() => new();
@@ -282,9 +282,9 @@ public static class MemberTests {
     public static void Method_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 int ITest.ExplicitTest() => -1;
@@ -310,9 +310,9 @@ public static class MemberTests {
     public static void Method_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 [IgnoreAutoInterface]
@@ -337,9 +337,9 @@ public static class MemberTests {
     public static void Method_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -391,9 +391,9 @@ public static class MemberTests {
     public static void Property() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int PTest => 1;
@@ -419,9 +419,9 @@ public static class MemberTests {
     public static void Property_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -453,9 +453,9 @@ public static class MemberTests {
     public static void Property_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -491,9 +491,9 @@ public static class MemberTests {
     public static void Property_Get() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int TestGet { get; } = 2;
@@ -519,9 +519,9 @@ public static class MemberTests {
     public static void Property_Set() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int TestSet { set; }
@@ -547,9 +547,9 @@ public static class MemberTests {
     public static void Property_GetSet() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int TestGetSet { get; set; }
@@ -575,9 +575,9 @@ public static class MemberTests {
     public static void Property_Init() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int TestInit { init; }
@@ -603,9 +603,9 @@ public static class MemberTests {
     public static void Property_GetInit() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public int TestGetInit { get; init; }
@@ -631,9 +631,9 @@ public static class MemberTests {
     public static void Property_FullName() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public global::System.Collections.Generic.List<int> NameTest => new();
@@ -659,9 +659,9 @@ public static class MemberTests {
     public static void Property_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 int ITest.ExplicitTest => -1;
@@ -687,9 +687,9 @@ public static class MemberTests {
     public static void Property_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 [IgnoreAutoInterface]
@@ -714,9 +714,9 @@ public static class MemberTests {
     public static void Property_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -784,9 +784,9 @@ public static class MemberTests {
     public static void Indexer() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class TestGet {
                 public int this[int i] {
@@ -815,9 +815,9 @@ public static class MemberTests {
     public static void Indexer_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class TestGet {
                 /// <summary>
@@ -851,9 +851,9 @@ public static class MemberTests {
     public static void Indexer_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class TestGet {
                 /// <summary>
@@ -891,9 +891,9 @@ public static class MemberTests {
     public static void Indexer_Get() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class TestGet {
                 public int this[int i] {
@@ -922,7 +922,7 @@ public static class MemberTests {
     public static void Indexer_Set() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
 
             [AutoInterface]
@@ -952,7 +952,7 @@ public static class MemberTests {
     public static void Indexer_GetSet() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
 
             [AutoInterface]
@@ -983,9 +983,9 @@ public static class MemberTests {
     public static void Indexer_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class TestExplicit {
                 int ITestExplicit.this[int i] {
@@ -1014,9 +1014,9 @@ public static class MemberTests {
     public static void Indexer_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class NoTest {
                 [IgnoreAutoInterface]
@@ -1044,9 +1044,9 @@ public static class MemberTests {
     public static void Indexer_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class TestGet {
                 /// <summary>
@@ -1170,9 +1170,9 @@ public static class MemberTests {
     public static void EventField() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public event Action ATest;
@@ -1198,9 +1198,9 @@ public static class MemberTests {
     public static void EventField_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -1232,9 +1232,9 @@ public static class MemberTests {
     public static void EventField_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -1270,9 +1270,9 @@ public static class MemberTests {
     public static void EventField_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 [IgnoreAutoInterface]
@@ -1297,9 +1297,9 @@ public static class MemberTests {
     public static void EventField_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -1339,9 +1339,9 @@ public static class MemberTests {
     public static void EventProperty() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 public event Action ATest { add { } remove { } }
@@ -1367,9 +1367,9 @@ public static class MemberTests {
     public static void EventProperty_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -1401,9 +1401,9 @@ public static class MemberTests {
     public static void EventProperty_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>
@@ -1439,9 +1439,9 @@ public static class MemberTests {
     public static void EventProperty_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 event Action ITest.ExplicitTest { add { } remove { } }
@@ -1467,9 +1467,9 @@ public static class MemberTests {
     public static void EventProperty_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 [IgnoreAutoInterface]
@@ -1494,9 +1494,9 @@ public static class MemberTests {
     public static void EventProperty_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test {
                 /// <summary>

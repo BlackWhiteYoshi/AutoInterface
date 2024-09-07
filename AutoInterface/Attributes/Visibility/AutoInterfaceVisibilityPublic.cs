@@ -8,9 +8,9 @@ public static partial class Attributes {
 
 
         #if !AUTOINTERFACE_EXCLUDE_ATTRIBUTES
-        
+
         using System;
-    
+
         namespace AutoInterfaceAttributes;
 
         /// <summary>

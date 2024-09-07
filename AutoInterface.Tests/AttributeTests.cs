@@ -11,9 +11,9 @@ public static class AttributeTests {
     public static void Name(string name) {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Name = "{{name}}")]
             public class Test { }
 
@@ -39,9 +39,9 @@ public static class AttributeTests {
     public static void Modifier(string modifier) {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Modifier = "{{modifier}}")]
             public class Test { }
 
@@ -67,9 +67,9 @@ public static class AttributeTests {
     public static void Namespace(string namspace) {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Namespace = "{{namspace}}")]
             public class Test { }
 
@@ -91,9 +91,9 @@ public static class AttributeTests {
     public static void Namespace_Empty() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Namespace = "")]
             public class Test { }
 
@@ -123,9 +123,9 @@ public static class AttributeTests {
     public static void Inheritance(string inheritance, string result) {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = {{inheritance}})]
             public class Test { }
 
@@ -154,9 +154,9 @@ public static class AttributeTests {
     public static void Nested() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Nested = ["public partial interface MyWrapper"])]
             public class Test;
 
@@ -180,9 +180,9 @@ public static class AttributeTests {
     public static void Nested_Triple() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Nested = ["public partial class MyWrapper", "public readonly partial struct MyWrapper2", "public partial interface OuterInterface"])]
             public class Test;
 
@@ -210,9 +210,9 @@ public static class AttributeTests {
     public static void NestedWithMembers() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Nested = ["public partial interface OuterInterface"])]
             public class Test {
                 public int GetNumber() => 1;
@@ -245,9 +245,9 @@ public static class AttributeTests {
     public static void StaticMembers() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(StaticMembers = true)]
             public class Test {
                 public static int GetNumber() => 1;
@@ -275,25 +275,25 @@ public static class AttributeTests {
     public static void AutoInterfaceVisibilityPublic() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test : ITest {
                 [AutoInterfaceVisibilityPublic]
                 public int MTest() => 1;
-                
+
                 [AutoInterfaceVisibilityPublic]
                 public int PTest => 1;
-                
+
                 [AutoInterfaceVisibilityPublic]
                 public int this[int i] {
                     get => i;
                 }
-                
+
                 [AutoInterfaceVisibilityPublic]
                 public event Action aTest;
-                
+
                 [AutoInterfaceVisibilityPublic]
                 public event Action ATest { add { } remove { } }
             }
@@ -331,25 +331,25 @@ public static class AttributeTests {
     public static void AutoInterfaceVisibilityInternal() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test : ITest {
                 [AutoInterfaceVisibilityInternal]
                 int ITest.MTest() => 1;
-                
+
                 [AutoInterfaceVisibilityInternal]
                 int ITest.PTest => 1;
-                
+
                 [AutoInterfaceVisibilityInternal]
                 int ITest.this[int i] {
                     get => i;
                 }
-                
+
                 [AutoInterfaceVisibilityInternal]
                 public event Action aTest;
-                
+
                 [AutoInterfaceVisibilityInternal]
                 event Action ITest.ATest { add { } remove { } }
             }
@@ -387,25 +387,25 @@ public static class AttributeTests {
     public static void AutoInterfaceVisibilityProtected() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test : ITest {
                 [AutoInterfaceVisibilityProtected]
                 int ITest.MTest() => 1;
-                
+
                 [AutoInterfaceVisibilityProtected]
                 int ITest.PTest => 1;
-                
+
                 [AutoInterfaceVisibilityProtected]
                 int ITest.this[int i] {
                     get => i;
                 }
-                
+
                 [AutoInterfaceVisibilityProtected]
                 public event Action aTest;
-                
+
                 [AutoInterfaceVisibilityProtected]
                 event Action ITest.ATest { add { } remove { } }
             }
@@ -443,25 +443,25 @@ public static class AttributeTests {
     public static void AutoInterfaceVisibilityProtectedInternal() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test : ITest {
                 [AutoInterfaceVisibilityProtectedInternal]
                 int ITest.MTest() => 1;
-                
+
                 [AutoInterfaceVisibilityProtectedInternal]
                 int ITest.PTest => 1;
-                
+
                 [AutoInterfaceVisibilityProtectedInternal]
                 int ITest.this[int i] {
                     get => i;
                 }
-                
+
                 [AutoInterfaceVisibilityProtectedInternal]
                 public event Action aTest;
-                
+
                 [AutoInterfaceVisibilityProtectedInternal]
                 event Action ITest.ATest { add { } remove { } }
             }
@@ -499,25 +499,25 @@ public static class AttributeTests {
     public static void AutoInterfaceVisibilityPrivateProtected() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test : ITest {
                 [AutoInterfaceVisibilityPrivateProtected]
                 int ITest.MTest() => 1;
-                
+
                 [AutoInterfaceVisibilityPrivateProtected]
                 int ITest.PTest => 1;
-                
+
                 [AutoInterfaceVisibilityPrivateProtected]
                 int ITest.this[int i] {
                     get => i;
                 }
-                
+
                 [AutoInterfaceVisibilityPrivateProtected]
                 public event Action aTest;
-                
+
                 [AutoInterfaceVisibilityPrivateProtected]
                 event Action ITest.ATest { add { } remove { } }
             }
@@ -555,25 +555,25 @@ public static class AttributeTests {
     public static void IgnoreAutoInterface() {
         const string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface]
             public class Test : ITest {
                 [IgnoreAutoInterface]
                 int ITest.MTest() => 1;
-                
+
                 [IgnoreAutoInterface]
                 int ITest.PTest => 1;
-                
+
                 [IgnoreAutoInterface]
                 int ITest.this[int i] {
                     get => i;
                 }
-                
+
                 [IgnoreAutoInterface]
                 event Action ITest.aTest;
-                
+
                 [IgnoreAutoInterface]
                 event Action ITest.ATest { add { } remove { } }
             }

@@ -9,9 +9,9 @@ public static class InheritanceTests {
     public static void Method() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestMethod() => 0;
@@ -39,9 +39,9 @@ public static class InheritanceTests {
     public static void Method_OtherTypeMember() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestMethod() => 0;
@@ -71,9 +71,9 @@ public static class InheritanceTests {
     public static void Method_OtherReturnType() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestMethod() => 0;
@@ -103,9 +103,9 @@ public static class InheritanceTests {
     public static void Method_OtherTypeParameters() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestMethod() => 0;
@@ -135,9 +135,9 @@ public static class InheritanceTests {
     public static void Method_OtherParameters() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestMethod() => 0;
@@ -167,9 +167,9 @@ public static class InheritanceTests {
     public static void Method_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestMethod() => 0;
@@ -204,9 +204,9 @@ public static class InheritanceTests {
     public static void Property() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestProperty => 0;
@@ -234,9 +234,9 @@ public static class InheritanceTests {
     public static void Property_OtherTypeMember() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestProperty => 0;
@@ -266,9 +266,9 @@ public static class InheritanceTests {
     public static void Property_OtherReturnType() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestProperty => 0;
@@ -298,9 +298,9 @@ public static class InheritanceTests {
     public static void Property_OtherAccessor() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestProperty { get; } = 0;
@@ -330,9 +330,9 @@ public static class InheritanceTests {
     public static void Property_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int TestProperty => 0;
@@ -367,9 +367,9 @@ public static class InheritanceTests {
     public static void Indexer() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int this[int i] => i;
@@ -397,9 +397,9 @@ public static class InheritanceTests {
     public static void Indexer_OtherTypeMember() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int this[int i] => i;
@@ -429,9 +429,9 @@ public static class InheritanceTests {
     public static void Indexer_OtherReturnType() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int this[int i] => i;
@@ -461,9 +461,9 @@ public static class InheritanceTests {
     public static void Indexer_OtherAccessor() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int this[int i] => i;
@@ -493,9 +493,9 @@ public static class InheritanceTests {
     public static void Indexer_OtherParameters() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public int this[int i] => i;
@@ -530,9 +530,9 @@ public static class InheritanceTests {
     public static void EventField() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public event Action eventTest;
@@ -560,9 +560,9 @@ public static class InheritanceTests {
     public static void EventField_OtherType() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public event Action eventTest;
@@ -592,9 +592,9 @@ public static class InheritanceTests {
     public static void EventField_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public event Action eventTest;
@@ -629,9 +629,9 @@ public static class InheritanceTests {
     public static void EventProperty() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public event Action EventTest { add { } remove { } }
@@ -659,9 +659,9 @@ public static class InheritanceTests {
     public static void EventProperty_OtherType() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public event Action EventTest { add { } remove { } }
@@ -691,9 +691,9 @@ public static class InheritanceTests {
     public static void EventProperty_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
-            
+
             namespace MyCode;
-            
+
             [AutoInterface(Inheritance = [typeof(IBase)])]
             public class Test : ITest {
                 public event Action EventTest { add { } remove { } }

@@ -89,7 +89,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.AppendInterpolation($"{usings}\n");
                 namspace = namspace.GetParent<BaseNamespaceDeclarationSyntax>();
             }
-            
+
             CompilationUnitSyntax? compilationUnit = targetType.GetParent<CompilationUnitSyntax>();
             if (compilationUnit != null)
                 builder.AppendInterpolation($"{compilationUnit.Usings}\n");
@@ -589,7 +589,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     if (eventDeclarationSyntax.AttributeLists.Count > 0)
                         builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
                             .AppendInterpolation($"{eventDeclarationSyntax.AttributeLists}\n");
-                    
+
                     builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
                         .AppendAccessModifier(member)
                         .AppendInterpolation($"{modifiers}event {eventDeclarationSyntax.Type} {eventDeclarationSyntax.Identifier};\n\n");
@@ -640,7 +640,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
         string source = builder.ToString();
 
-        
+
         builder.Clear();
 
         if (attribute.name is null)
