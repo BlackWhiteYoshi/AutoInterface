@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace AutoInterface;
@@ -12,7 +13,7 @@ internal static class Extensions {
     /// <typeparam name="T">the type of </typeparam>
     /// <param name="syntaxNode"></param>
     /// <returns>The first node of type T, otherwise null.</returns>
-    internal static T? GetParent<T>(this SyntaxNode syntaxNode) where T : SyntaxNode {
+    public static T? GetParent<T>(this SyntaxNode syntaxNode) where T : SyntaxNode {
         SyntaxNode? currentNode = syntaxNode.Parent;
         while (currentNode != null) {
             if (currentNode is T t)
@@ -31,7 +32,7 @@ internal static class Extensions {
     /// <param name="attributeName"></param>
     /// <param name="attributeNameAttribute"></param>
     /// <returns></returns>
-    internal static AttributeSyntax? GetAttribute(this MemberDeclarationSyntax member, string attributeName) {
+    public static AttributeSyntax? GetAttribute(this MemberDeclarationSyntax member, string attributeName) {
         foreach (AttributeListSyntax attributeList in member.AttributeLists)
             foreach (AttributeSyntax attribute in attributeList.Attributes) {
                 string identifier = attribute.Name switch {
@@ -59,7 +60,7 @@ internal static class Extensions {
     /// <param name="modifiers"></param>
     /// <param name="token"></param>
     /// <returns></returns>
-    internal static bool Contains(this SyntaxTokenList modifiers, string token) {
+    public static bool Contains(this SyntaxTokenList modifiers, string token) {
         foreach (SyntaxToken modifier in modifiers)
             if (modifier.ValueText == token)
                 return true;
@@ -75,7 +76,7 @@ internal static class Extensions {
     /// <param name="arguments"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    internal static TypedConstant? GetArgument(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name) {
+    public static TypedConstant? GetArgument(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name) {
         for (int i = 0; i < arguments.Length; i++)
             if (arguments[i].Key == name)
                 return arguments[i].Value;
@@ -90,7 +91,7 @@ internal static class Extensions {
     /// <param name="arguments"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    internal static T? GetArgument<T>(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name)
+    public static T? GetArgument<T>(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name)
         => GetArgument(arguments, name) switch {
             TypedConstant { Value: T value } => value,
             _ => default
@@ -104,7 +105,7 @@ internal static class Extensions {
     /// <param name="arguments"></param>
     /// <param name="name"></param>
     /// <returns></returns>
-    internal static T[] GetArgumentArray<T>(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name) {
+    public static T[] GetArgumentArray<T>(this ImmutableArray<KeyValuePair<string, TypedConstant>> arguments, string name) {
         if (arguments.GetArgument(name) is not TypedConstant { Kind: TypedConstantKind.Array } typeArray)
             return [];
 
@@ -128,13 +129,15 @@ internal static class Extensions {
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="namespaceSymbol"></param>
-    internal static void AppendNamespace(this StringBuilder builder, INamespaceSymbol namespaceSymbol) {
+    public static StringBuilder AppendNamespace(this StringBuilder builder, INamespaceSymbol namespaceSymbol) {
         if (namespaceSymbol.Name == string.Empty)
-            return;
+            return builder;
 
         AppendNamespace(builder, namespaceSymbol.ContainingNamespace);
         builder.Append(namespaceSymbol.Name);
         builder.Append('.');
+
+        return builder;
     }
 
     /// <summary>
@@ -146,13 +149,15 @@ internal static class Extensions {
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="containingType"></param>
-    internal static void AppendContainingTypes(this StringBuilder builder, INamedTypeSymbol? containingType) {
+    public static StringBuilder AppendContainingTypes(this StringBuilder builder, INamedTypeSymbol? containingType) {
         if (containingType == null)
-            return;
-        
+            return builder;
+
         builder.AppendContainingTypes(containingType.ContainingType);
         builder.Append(containingType.Name);
         builder.Append('.');
+
+        return builder;
     }
 
     /// <summary>
@@ -163,9 +168,9 @@ internal static class Extensions {
     /// <para>if the given symbol has no typeParameters, nothing is appended.</para>
     /// </summary>
     /// <param name="builder"></param>
-    internal static void AppendParameterList(this StringBuilder builder, INamedTypeSymbol typeSymbol) {
+    public static StringBuilder AppendParameterList(this StringBuilder builder, INamedTypeSymbol typeSymbol) {
         if (typeSymbol.TypeParameters.Length == 0)
-            return;
+            return builder;
 
         builder.Append('{');
 
@@ -176,6 +181,8 @@ internal static class Extensions {
         }
 
         builder.Append('}');
+
+        return builder;
     }
 
     /// <summary>
@@ -190,7 +197,7 @@ internal static class Extensions {
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="member"></param>
-    internal static void AppendAccessModifier(this StringBuilder builder, MemberDeclarationSyntax member) {
+    public static StringBuilder AppendAccessModifier(this StringBuilder builder, MemberDeclarationSyntax member) {
         if (member.GetAttribute("AutoInterfaceVisibilityPublic") is not null)
             builder.Append("public ");
         if (member.GetAttribute("AutoInterfaceVisibilityInternal") is not null)
@@ -201,5 +208,28 @@ internal static class Extensions {
             builder.Append("protected internal ");
         if (member.GetAttribute("AutoInterfaceVisibilityPrivateProtected") is not null)
             builder.Append("private protected ");
+
+        return builder;
+    }
+
+
+    /// <summary>
+    /// The same as <see cref="StringBuilder.Append(string)"/>, but only for interpolated strings: $"..."<br />
+    /// It constructs the string directly in the builder, so no unnecessary string memory allocations.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="handler"></param>
+    /// <returns></returns>
+    public static StringBuilder AppendInterpolation(this StringBuilder builder, [InterpolatedStringHandlerArgument("builder")] StringBuilderInterpolationHandler handler) => builder;
+
+    [InterpolatedStringHandler]
+    public readonly ref struct StringBuilderInterpolationHandler {
+        private readonly StringBuilder builder;
+
+        public StringBuilderInterpolationHandler(int literalLength, int formattedCount, StringBuilder builder) => this.builder = builder;
+
+        public void AppendLiteral(string str) => builder.Append(str);
+
+        public void AppendFormatted<T>(T item) => builder.Append(item);
     }
 }
