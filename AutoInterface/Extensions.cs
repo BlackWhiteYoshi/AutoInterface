@@ -133,9 +133,8 @@ internal static class Extensions {
         if (namespaceSymbol.Name == string.Empty)
             return builder;
 
-        AppendNamespace(builder, namespaceSymbol.ContainingNamespace);
-        builder.Append(namespaceSymbol.Name);
-        builder.Append('.');
+        AppendNamespace(builder, namespaceSymbol.ContainingNamespace)
+            .AppendInterpolation($"{namespaceSymbol.Name}.");
 
         return builder;
     }
@@ -153,9 +152,8 @@ internal static class Extensions {
         if (containingType == null)
             return builder;
 
-        builder.AppendContainingTypes(containingType.ContainingType);
-        builder.Append(containingType.Name);
-        builder.Append('.');
+        builder.AppendContainingTypes(containingType.ContainingType)
+            .AppendInterpolation($"{containingType.Name}.");
 
         return builder;
     }
@@ -175,10 +173,8 @@ internal static class Extensions {
         builder.Append('{');
 
         builder.Append(typeSymbol.TypeParameters[0].Name);
-        for (int i = 1; i < typeSymbol.TypeParameters.Length; i++) {
-            builder.Append(typeSymbol.TypeParameters[i].Name);
-            builder.Append(", ");
-        }
+        for (int i = 1; i < typeSymbol.TypeParameters.Length; i++)
+            builder.AppendInterpolation($"{typeSymbol.TypeParameters[i].Name}, ");
 
         builder.Append('}');
 
