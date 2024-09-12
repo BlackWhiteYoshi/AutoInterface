@@ -8,6 +8,14 @@ namespace AutoInterface;
 
 internal static class Extensions {
     /// <summary>
+    /// Appends <see cref="Indent.Level"/> of copies of <see cref="Indent.CHAR"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="indent"></param>
+    public static StringBuilder AppendIndent(this StringBuilder builder, AutoInterfaceGenerator.Indent indent) => builder.Append(AutoInterfaceGenerator.Indent.CHAR, indent.Level);
+
+
+    /// <summary>
     /// Finds the first node of type T by traversing the parent nodes.
     /// </summary>
     /// <typeparam name="T">the type of </typeparam>
@@ -138,6 +146,12 @@ internal static class Extensions {
 
         return builder;
     }
+    /// <summary>
+    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.INamespace)"/> to <see cref="AppendNamespace"/>.
+    /// </summary>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static StringBuilderInterpolationHandler.INamespace AsNamespace(this INamespaceSymbol namespaceSymbol) => Unsafe.As<StringBuilderInterpolationHandler.INamespace>(namespaceSymbol);
 
     /// <summary>
     /// <para>
@@ -157,6 +171,12 @@ internal static class Extensions {
 
         return builder;
     }
+    /// <summary>
+    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IContainingTypes)"/> to <see cref="AppendContainingTypes"/>.
+    /// </summary>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static StringBuilderInterpolationHandler.IContainingTypes AsContainingTypes(this INamedTypeSymbol? containingType) => Unsafe.As<StringBuilderInterpolationHandler.IContainingTypes>(containingType);
 
     /// <summary>
     /// <para>
@@ -180,6 +200,12 @@ internal static class Extensions {
 
         return builder;
     }
+    /// <summary>
+    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IParameterList)"/> to <see cref="AppendParameterList"/>.
+    /// </summary>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static StringBuilderInterpolationHandler.IParameterList AsParameterList(this INamedTypeSymbol typeSymbol) => Unsafe.As<StringBuilderInterpolationHandler.IParameterList>(typeSymbol);
 
     /// <summary>
     /// <para>Appends a access modifier when the corresponding attribute is present:</para>
@@ -207,6 +233,12 @@ internal static class Extensions {
 
         return builder;
     }
+    /// <summary>
+    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IAccessModifier)"/> to <see cref="AppendAccessModifier"/>.
+    /// </summary>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static StringBuilderInterpolationHandler.IAccessModifier AsAccessModifier(this MemberDeclarationSyntax member) => Unsafe.As<StringBuilderInterpolationHandler.IAccessModifier>(member);
 
 
     /// <summary>
@@ -227,5 +259,21 @@ internal static class Extensions {
         public void AppendLiteral(string str) => builder.Append(str);
 
         public void AppendFormatted<T>(T item) => builder.Append(item);
+
+
+        public void AppendFormatted(AutoInterfaceGenerator.Indent indent) => builder.AppendIndent(indent);
+
+        public interface INamespace;
+        public void AppendFormatted(INamespace @namespace) => builder.AppendNamespace(Unsafe.As<INamespaceSymbol>(@namespace));
+
+        public interface IContainingTypes;
+        public void AppendFormatted(IContainingTypes containingType) => builder.AppendContainingTypes(Unsafe.As<INamedTypeSymbol?>(containingType));
+
+        public interface IParameterList;
+        public void AppendFormatted(IParameterList parameterList) => builder.AppendParameterList(Unsafe.As<INamedTypeSymbol>(parameterList));
+
+        public interface IAccessModifier;
+        public void AppendFormatted(IAccessModifier accessModifier) => builder.AppendAccessModifier(Unsafe.As<MemberDeclarationSyntax>(accessModifier));
+
     }
 }

@@ -8,6 +8,22 @@ namespace AutoInterface;
 
 [Generator(LanguageNames.CSharp)]
 public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
+    /// <summary>
+    /// An int wrapper to handle indentation.
+    /// </summary>
+    public struct Indent {
+        public const int AMOUNT = 4;
+        public const char CHAR = ' ';
+
+
+        public int Level { get; private set; }
+
+        public void IncreaseLevel() => Level += AMOUNT;
+
+        public void DecreaseLevel() => Level -= AMOUNT;
+    }
+
+
     private readonly ObjectPool<StringBuilder> stringBuilderPool = new DefaultObjectPoolProvider().CreateStringBuilderPool(initialCapacity: 8192, maximumRetainedCapacity: 1024 * 1024);
 
     public void Initialize(IncrementalGeneratorInitializationContext context) {
@@ -39,9 +55,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
     }
 
     private void Execute(SourceProductionContext context, ClassWithAttributeData provider) {
-        const char INDENTCHAR = ' ';
-        const int INDENTLEVEL = 4;
-        int currentIndent = 0;
+        Indent indent = new();
 
         TypeDeclarationSyntax targetType = provider.Type;
         INamedTypeSymbol targetSymbol = provider.TypeSymbol;
@@ -106,9 +120,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                 if (namespaceSymbol.Name == string.Empty)
                     break; // global namespace -> append nothing
 
-                builder.Append("namespace ")
-                    .AppendNamespace(namespaceSymbol.ContainingNamespace)
-                    .AppendInterpolation($"{namespaceSymbol.Name};\n\n");
+                builder.AppendInterpolation($"namespace {namespaceSymbol.ContainingNamespace.AsNamespace()}{namespaceSymbol.Name};\n\n");
                 break;
             default:
                 builder.AppendInterpolation($"namespace {attribute.namspace};\n\n");
@@ -117,45 +129,43 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
         // nesting
         foreach (string containingType in attribute.nested) {
-            builder.Append(INDENTCHAR, currentIndent)
-                .AppendInterpolation($"{containingType} {{\n");
-            currentIndent += INDENTLEVEL;
+            builder.AppendInterpolation($"{indent}{containingType} {{\n");
+            indent.IncreaseLevel();
         }
 
         // summary
         foreach (SyntaxTrivia trivia in targetType.AttributeLists[0].GetLeadingTrivia())
             if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                builder.Append(INDENTCHAR, currentIndent)
-                    .AppendInterpolation($"///{documentationCommentTrivia}");
+                builder.AppendInterpolation($"{indent}///{documentationCommentTrivia}");
                 break;
             }
 
         // class/struct declaration
-        builder.Append(INDENTCHAR, currentIndent);
-        builder.AppendInterpolation($"{attribute.modifier} interface ");
-        if (attribute.name is null)
-            builder.AppendInterpolation($"I{targetSymbol.Name}");
-        else
-            builder.Append(attribute.name);
+        {
+            if (attribute.name is null)
+                builder.AppendInterpolation($"{indent}{attribute.modifier} interface I{targetSymbol.Name}");
+            else
+                builder.AppendInterpolation($"{indent}{attribute.modifier} interface {attribute.name}");
 
-        if (targetType.TypeParameterList?.Parameters.Count > 0) {
-            builder.Append('<');
+            if (targetType.TypeParameterList?.Parameters.Count > 0) {
+                builder.Append('<');
 
-            foreach (TypeParameterSyntax parameter in targetType.TypeParameterList.Parameters)
-                builder.AppendInterpolation($"{parameter.Identifier.ValueText}, ");
-            builder.Length -= 2;
+                foreach (TypeParameterSyntax parameter in targetType.TypeParameterList.Parameters)
+                    builder.AppendInterpolation($"{parameter.Identifier.ValueText}, ");
+                builder.Length -= 2;
 
-            builder.Append('>');
+                builder.Append('>');
+            }
+
+            if (attribute.inheritance.Length > 0) {
+                builder.AppendInterpolation($" : {attribute.inheritance[0]}");
+                for (int i = 1; i < attribute.inheritance.Length; i++)
+                    builder.AppendInterpolation($", {attribute.inheritance[i]}");
+            }
+
+            builder.Append(" {\n");
+            indent.IncreaseLevel();
         }
-
-        if (attribute.inheritance.Length > 0) {
-            builder.AppendInterpolation($" : {attribute.inheritance[0]}");
-            for (int i = 1; i < attribute.inheritance.Length; i++)
-                builder.AppendInterpolation($", {attribute.inheritance[i]}");
-        }
-
-        builder.Append(" {\n");
-
 
         foreach (MemberDeclarationSyntax member in targetType.Members) {
             if (member.GetAttribute("IgnoreAutoInterface") != null)
@@ -251,19 +261,16 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                                .AppendInterpolation($"///{documentationCommentTrivia}");
+                            builder.AppendInterpolation($"{indent}///{documentationCommentTrivia}");
                             break;
                         }
 
                     // attributes
                     if (methodDeclarationSyntax.AttributeLists.Count > 0)
-                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                            .AppendInterpolation($"{methodDeclarationSyntax.AttributeLists}\n");
+                        builder.AppendInterpolation($"{indent}{methodDeclarationSyntax.AttributeLists}\n");
 
-                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                        .AppendAccessModifier(member)
-                        .AppendInterpolation($"{modifiers}{methodDeclarationSyntax.ReturnType} {methodDeclarationSyntax.Identifier.ValueText}{methodDeclarationSyntax.TypeParameterList}{methodDeclarationSyntax.ParameterList}");
+                    // actual declaration
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}{methodDeclarationSyntax.ReturnType} {methodDeclarationSyntax.Identifier.ValueText}{methodDeclarationSyntax.TypeParameterList}{methodDeclarationSyntax.ParameterList}");
                     if (methodDeclarationSyntax.ConstraintClauses.ToString() is string { Length: > 0 } constraintClauses)
                         builder.AppendInterpolation($" {constraintClauses}");
                     builder.Append(";\n\n");
@@ -342,21 +349,16 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                                .AppendInterpolation($"///{documentationCommentTrivia}");
+                            builder.AppendInterpolation($"{indent}///{documentationCommentTrivia}");
                             break;
                         }
 
                     // attributes
                     if (propertyDeclarationSyntax.AttributeLists.Count > 0)
-                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                            .AppendInterpolation($"{propertyDeclarationSyntax.AttributeLists}\n");
+                        builder.AppendInterpolation($"{indent}{propertyDeclarationSyntax.AttributeLists}\n");
 
-                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                        .AppendAccessModifier(member)
-                        .AppendInterpolation($"{modifiers}{propertyDeclarationSyntax.Type} {propertyDeclarationSyntax.Identifier.ValueText} ");
-
-                    builder.Append("{ ");
+                    // actual declaration
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}{propertyDeclarationSyntax.Type} {propertyDeclarationSyntax.Identifier.ValueText} {{ ");
                     if (propertyDeclarationSyntax.AccessorList is not null) {
                         foreach (AccessorDeclarationSyntax accessor in propertyDeclarationSyntax.AccessorList.Accessors)
                             if (accessor.Modifiers.Count == 0) // check if public
@@ -425,21 +427,16 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                                .AppendInterpolation($"///{documentationCommentTrivia}");
+                            builder.AppendInterpolation($"{indent}///{documentationCommentTrivia}");
                             break;
                         }
 
                     // attributes
                     if (indexerDeclarationSyntax.AttributeLists.Count > 0)
-                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                            .AppendInterpolation($"{indexerDeclarationSyntax.AttributeLists}\n");
+                        builder.AppendInterpolation($"{indent}{indexerDeclarationSyntax.AttributeLists}\n");
 
-                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                        .AppendAccessModifier(member)
-                        .AppendInterpolation($"{indexerDeclarationSyntax.Type} this{indexerDeclarationSyntax.ParameterList} ");
-
-                    builder.Append("{ ");
+                    // actual declaration
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{indexerDeclarationSyntax.Type} this{indexerDeclarationSyntax.ParameterList} {{ ");
                     if (indexerDeclarationSyntax.AccessorList != null) {
                         foreach (AccessorDeclarationSyntax accessor in indexerDeclarationSyntax.AccessorList.Accessors)
                             if (accessor.Modifiers.Count == 0) // check if public
@@ -500,19 +497,16 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                                .AppendInterpolation($"///{documentationCommentTrivia}");
+                            builder.AppendInterpolation($"{indent}///{documentationCommentTrivia}");
                             break;
                         }
 
                     // attributes
                     if (eventFieldDeclarationSyntax.AttributeLists.Count > 0)
-                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                            .AppendInterpolation($"{eventFieldDeclarationSyntax.AttributeLists}\n");
+                        builder.AppendInterpolation($"{indent}{eventFieldDeclarationSyntax.AttributeLists}\n");
 
-                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                        .AppendAccessModifier(member)
-                        .AppendInterpolation($"{modifiers}event {eventFieldDeclarationSyntax.Declaration.Type} {eventFieldDeclarationSyntax.Declaration.Variables};\n\n");
+                    // actual declaration
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}event {eventFieldDeclarationSyntax.Declaration.Type} {eventFieldDeclarationSyntax.Declaration.Variables};\n\n");
 
                     _switchBreak:
                     break;
@@ -580,19 +574,16 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     };
                     foreach (SyntaxTrivia trivia in triviaList)
                         if (trivia.GetStructure() is DocumentationCommentTriviaSyntax documentationCommentTrivia) {
-                            builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                                .AppendInterpolation($"///{documentationCommentTrivia}");
+                            builder.AppendInterpolation($"{indent}///{documentationCommentTrivia}");
                             break;
                         }
 
                     // attributes
                     if (eventDeclarationSyntax.AttributeLists.Count > 0)
-                        builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                            .AppendInterpolation($"{eventDeclarationSyntax.AttributeLists}\n");
+                        builder.AppendInterpolation($"{indent}{eventDeclarationSyntax.AttributeLists}\n");
 
-                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                        .AppendAccessModifier(member)
-                        .AppendInterpolation($"{modifiers}event {eventDeclarationSyntax.Type} {eventDeclarationSyntax.Identifier};\n\n");
+                    // actual declaration
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}event {eventDeclarationSyntax.Type} {eventDeclarationSyntax.Identifier};\n\n");
 
                     _switchBreak:
                     break;
@@ -610,13 +601,11 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
             for (int i = 0; i < recordParameterList.Count; i++)
                 if (!recordParameterOverwrittenFlags[i] && recordParameterList[i] is ParameterSyntax { Type: not null } parameter)
-                    builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                        .AppendInterpolation($"{parameter.Type} {parameter.Identifier.ValueText}{getterSetter}");
+                    builder.AppendInterpolation($"{indent}{parameter.Type} {parameter.Identifier.ValueText}{getterSetter}");
 
             // Deconstruct()
             if (!recordDeconstructOverwrittenFlag) {
-                builder.Append(INDENTCHAR, currentIndent + INDENTLEVEL)
-                    .Append("void Deconstruct(");
+                builder.AppendInterpolation($"{indent}void Deconstruct(");
 
                 foreach (ParameterSyntax parameter in recordParameterList)
                     builder.AppendInterpolation($"out {parameter.Type} {parameter.Identifier.ValueText}, ");
@@ -628,14 +617,13 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
 
         builder.Length--;
-        builder.Append(INDENTCHAR, currentIndent)
-            .Append("}\n");
+        indent.DecreaseLevel();
+        builder.AppendInterpolation($"{indent}}}\n");
 
         // nesting
         for (int i = 0; i < attribute.nested.Length; i++) {
-            currentIndent -= INDENTLEVEL;
-            builder.Append(INDENTCHAR, currentIndent)
-                .Append("}\n");
+            indent.DecreaseLevel();
+            builder.AppendInterpolation($"{indent}}}\n");
         }
 
         string source = builder.ToString();
