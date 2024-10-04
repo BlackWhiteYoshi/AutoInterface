@@ -27,18 +27,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
     private readonly ObjectPool<StringBuilder> stringBuilderPool = new DefaultObjectPoolProvider().CreateStringBuilderPool(initialCapacity: 8192, maximumRetainedCapacity: 1024 * 1024);
 
     public void Initialize(IncrementalGeneratorInitializationContext context) {
-        // register attribute marker
-        context.RegisterPostInitializationOutput(static (IncrementalGeneratorPostInitializationContext context) => {
-            context.AddSource("AutoInterfaceAttribute.g.cs", Attributes.AutoInterfaceAttribute);
-            context.AddSource("IgnoreAutoInterfaceAttribute.g.cs", Attributes.IgnoreAutoInterfaceAttribute);
-
-            context.AddSource("AutoInterfaceVisibilityPublicAttribute.g.cs", Attributes.AutoInterfaceVisibilityPublicAttribute);
-            context.AddSource("AutoInterfaceVisibilityInternalAttribute.g.cs", Attributes.AutoInterfaceVisibilityInternalAttribute);
-            context.AddSource("AutoInterfaceVisibilityProtectedAttribute.g.cs", Attributes.AutoInterfaceVisibilityProtectedAttribute);
-            context.AddSource("AutoInterfaceVisibilityProtectedInternalAttribute.g.cs", Attributes.AutoInterfaceVisibilityProtectedInternalAttribute);
-            context.AddSource("AutoInterfaceVisibilityPrivateProtectedAttribute.g.cs", Attributes.AutoInterfaceVisibilityPrivateProtectedAttribute);
-        });
-
         // all classes/structs with AutoInterfaceAttribute
         IncrementalValuesProvider<ClassWithAttributeData> interfaceTypeProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
             "AutoInterfaceAttributes.AutoInterfaceAttribute",
