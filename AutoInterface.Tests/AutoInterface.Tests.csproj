@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AutoInterface\AutoInterface.csproj" />
+    <ProjectReference Include="..\AutoInterface.Attributes\AutoInterface.Attributes.csproj" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
