@@ -1,6 +1,4 @@
-﻿#pragma warning disable
-
-#if !AUTOINTERFACE_EXCLUDE_ATTRIBUTES
+﻿#if !AUTOINTERFACE_EXCLUDE_ATTRIBUTES
 
 using System;
 using System.Diagnostics;
@@ -12,7 +10,7 @@ namespace AutoInterfaceAttributes;
 /// </summary>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Event)]
 [Conditional("AUTO_INTERFACE_USAGES")]
-[System.CodeDom.Compiler.GeneratedCodeAttribute("{{NAME}}", "{{VERSION}}")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute(AttributeInfo.NAME, AttributeInfo.VERSION)]
 public sealed class AutoInterfaceVisibilityInternal : Attribute;
 
 #endif

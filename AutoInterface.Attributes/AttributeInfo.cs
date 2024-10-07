@@ -1,6 +1,6 @@
-﻿namespace AutoInterface;
+﻿namespace AutoInterfaceAttributes;
 
-public static partial class Attributes {
-    private const string NAME = "AutoInterface";
-    private const string VERSION = "2.4.0";
+public static class AttributeInfo {
+    public const string NAME = "AutoInterface";
+    public const string VERSION = "2.4.0";
 }

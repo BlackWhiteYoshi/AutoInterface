@@ -1,6 +1,4 @@
-﻿#pragma warning disable
-
-#if !AUTOINTERFACE_EXCLUDE_ATTRIBUTES
+﻿#if !AUTOINTERFACE_EXCLUDE_ATTRIBUTES
 
 using System;
 using System.Diagnostics;
@@ -12,32 +10,32 @@ namespace AutoInterfaceAttributes;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
 [Conditional("AUTO_INTERFACE_USAGES")]
-[System.CodeDom.Compiler.GeneratedCodeAttribute("{{NAME}}", "{{VERSION}}")]
+[System.CodeDom.Compiler.GeneratedCodeAttribute(AttributeInfo.NAME, AttributeInfo.VERSION)]
 public sealed class AutoInterfaceAttribute : Attribute {
     /// <summary>
     /// <para>The name of the generated interface.</para>
     /// <para>Default is "I{ClassName}"</para>
     /// </summary>
-    public string Name { get; init; }
+    public string? Name { get; init; }
 
     /// <summary>
     /// <para>The modifier(s) for the interface.</para>
     /// <para>Default is "public partial"</para>
     /// </summary>
-    public string Modifier { get; init; }
+    public string? Modifier { get; init; }
 
     /// <summary>
     /// <para>The namespace declaration for the interface.</para>
     /// <para>If empty string, no namespace directive will be used (global namespace).<br />
     /// Default (if not present) it will be mapped to the same namespace as the namespace of the class/struct.</para>
     /// </summary>
-    public string Namespace { get; init; }
+    public string? Namespace { get; init; }
 
     /// <summary>
     /// <para>interface inheritance: Name(s) of interfaces this interface will inherit.</para>
     /// <para>Default is Array.Empty</para>
     /// </summary>
-    public Type[] Inheritance { get; init; }
+    public Type[]? Inheritance { get; init; }
 
     /// <summary>
     /// <para>
@@ -46,7 +44,7 @@ public sealed class AutoInterfaceAttribute : Attribute {
     /// </para>
     /// <para>Default is Array.Empty</para>
     /// </summary>
-    public string[] Nested { get; init; }
+    public string[]? Nested { get; init; }
 
     /// <summary>
     /// <para>If enabled, static members get accepted and are generating "static abstract" members.</para>
