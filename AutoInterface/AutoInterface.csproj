@@ -28,6 +28,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 
     <Version>2.4.0</Version>
