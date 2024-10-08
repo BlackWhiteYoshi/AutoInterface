@@ -5,7 +5,9 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoInterface", "AutoInterface\AutoInterface.csproj", "{5F23B688-1FB7-42F5-BC0A-FDA282860915}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoInterface.Tests", "AutoInterface.Tests\AutoInterface.Tests.csproj", "{BB7E9E8E-F3FB-494F-9BEF-FDCEF22BB272}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoInterface.Tests", "AutoInterface.Tests\AutoInterface.Tests.csproj", "{BB7E9E8E-F3FB-494F-9BEF-FDCEF22BB272}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoInterface.Attributes", "AutoInterface.Attributes\AutoInterface.Attributes.csproj", "{31F3B723-F84D-42EB-B3B4-E8605EAD7BC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{BB7E9E8E-F3FB-494F-9BEF-FDCEF22BB272}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB7E9E8E-F3FB-494F-9BEF-FDCEF22BB272}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB7E9E8E-F3FB-494F-9BEF-FDCEF22BB272}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31F3B723-F84D-42EB-B3B4-E8605EAD7BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F3B723-F84D-42EB-B3B4-E8605EAD7BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F3B723-F84D-42EB-B3B4-E8605EAD7BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F3B723-F84D-42EB-B3B4-E8605EAD7BC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

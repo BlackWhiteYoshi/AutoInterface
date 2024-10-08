@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+     <LangVersion>12</LangVersion>
+     <NoWarn>$(NoWarn),IDE0130</NoWarn>
+     <Nullable>enable</Nullable>
+     <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+   <ItemGroup>
+      <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+   </ItemGroup>
+
+</Project>

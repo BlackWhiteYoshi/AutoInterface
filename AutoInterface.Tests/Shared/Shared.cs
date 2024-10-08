@@ -27,10 +27,13 @@ public static class Shared {
 
         static CSharpCompilation CreateCompilation(string source) {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
-            PortableExecutableReference metadataReference = MetadataReference.CreateFromFile(typeof(Binder).GetTypeInfo().Assembly.Location);
+            IEnumerable<PortableExecutableReference> references = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && !string.IsNullOrWhiteSpace(a.Location))
+                .Select(p => MetadataReference.CreateFromFile(p.Location))
+                .Concat([MetadataReference.CreateFromFile(typeof(AutoInterfaceGenerator).Assembly.Location)]);
             CSharpCompilationOptions compilationOptions = new(OutputKind.ConsoleApplication);
 
-            return CSharpCompilation.Create("compilation", [syntaxTree], [metadataReference], compilationOptions);
+            return CSharpCompilation.Create("compilation", [syntaxTree], references, compilationOptions);
         }
     }
 }
