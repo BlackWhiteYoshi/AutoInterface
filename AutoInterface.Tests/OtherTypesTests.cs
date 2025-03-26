@@ -1,10 +1,8 @@
-﻿using Xunit;
+﻿namespace AutoInterface.Tests;
 
-namespace AutoInterface.Tests;
-
-public static class OtherTypesTests {
-    [Fact]
-    public static void Generic() {
+public sealed class OtherTypesTests {
+    [Test]
+    public async ValueTask Generic() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -28,12 +26,12 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Fact]
-    public static void Struct() {
+    [Test]
+    public async ValueTask Struct() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -57,11 +55,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Record() {
+    [Test]
+    public async ValueTask Record() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -85,12 +83,12 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Fact]
-    public static void RecordClass() {
+    [Test]
+    public async ValueTask RecordClass() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -114,11 +112,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordClassParameterList() {
+    [Test]
+    public async ValueTask RecordClassParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -146,11 +144,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordClassEmptyParameterList() {
+    [Test]
+    public async ValueTask RecordClassEmptyParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -174,12 +172,12 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Fact]
-    public static void RecordStruct() {
+    [Test]
+    public async ValueTask RecordStruct() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -203,11 +201,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordStructParameterList() {
+    [Test]
+    public async ValueTask RecordStructParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -235,11 +233,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordStructEmptyParameterList() {
+    [Test]
+    public async ValueTask RecordStructEmptyParameterList() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -263,11 +261,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordOverwriteProperty() {
+    [Test]
+    public async ValueTask RecordOverwriteProperty() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -293,11 +291,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordOverwriteField() {
+    [Test]
+    public async ValueTask RecordOverwriteField() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -321,11 +319,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordOverwriteMultipleFields() {
+    [Test]
+    public async ValueTask RecordOverwriteMultipleFields() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -349,11 +347,11 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void RecordOverwriteDeconstrcut() {
+    [Test]
+    public async ValueTask RecordOverwriteDeconstrcut() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -382,6 +380,6 @@ public static class OtherTypesTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 }

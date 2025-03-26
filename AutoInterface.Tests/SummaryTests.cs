@@ -1,10 +1,8 @@
-﻿using Xunit;
+﻿namespace AutoInterface.Tests;
 
-namespace AutoInterface.Tests;
-
-public static class SummaryTests {
-    [Fact]
-    public static void Summary() {
+public sealed class SummaryTests {
+    [Test]
+    public async ValueTask Summary() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -30,11 +28,11 @@ public static class SummaryTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Summary_Method() {
+    [Test]
+    public async ValueTask Summary_Method() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -74,11 +72,11 @@ public static class SummaryTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Summary_PreProcessorDirective() {
+    [Test]
+    public async ValueTask Summary_PreProcessorDirective() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -128,6 +126,6 @@ public static class SummaryTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 }

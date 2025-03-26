@@ -1,12 +1,10 @@
-﻿using Xunit;
+﻿namespace AutoInterface.Tests;
 
-namespace AutoInterface.Tests;
-
-public static class InheritanceTests {
+public sealed class InheritanceTests {
     #region Method
 
-    [Fact]
-    public static void Method() {
+    [Test]
+    public async ValueTask Method() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -32,11 +30,11 @@ public static class InheritanceTests {
             public partial interface ITest : MyCode.IBase {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_OtherTypeMember() {
+    [Test]
+    public async ValueTask Method_OtherTypeMember() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -64,11 +62,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_OtherReturnType() {
+    [Test]
+    public async ValueTask Method_OtherReturnType() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -96,11 +94,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_OtherTypeParameters() {
+    [Test]
+    public async ValueTask Method_OtherTypeParameters() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -128,11 +126,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_OtherParameters() {
+    [Test]
+    public async ValueTask Method_OtherParameters() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -160,11 +158,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_OtherStatic() {
+    [Test]
+    public async ValueTask Method_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -192,7 +190,7 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
@@ -200,8 +198,8 @@ public static class InheritanceTests {
 
     #region Property
 
-    [Fact]
-    public static void Property() {
+    [Test]
+    public async ValueTask Property() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -227,11 +225,11 @@ public static class InheritanceTests {
             public partial interface ITest : MyCode.IBase {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_OtherTypeMember() {
+    [Test]
+    public async ValueTask Property_OtherTypeMember() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -259,11 +257,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_OtherReturnType() {
+    [Test]
+    public async ValueTask Property_OtherReturnType() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -291,11 +289,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_OtherAccessor() {
+    [Test]
+    public async ValueTask Property_OtherAccessor() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -323,11 +321,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_OtherStatic() {
+    [Test]
+    public async ValueTask Property_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -355,7 +353,7 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
@@ -363,8 +361,8 @@ public static class InheritanceTests {
 
     #region Indexer
 
-    [Fact]
-    public static void Indexer() {
+    [Test]
+    public async ValueTask Indexer() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -390,11 +388,11 @@ public static class InheritanceTests {
             public partial interface ITest : MyCode.IBase {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_OtherTypeMember() {
+    [Test]
+    public async ValueTask Indexer_OtherTypeMember() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -422,11 +420,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_OtherReturnType() {
+    [Test]
+    public async ValueTask Indexer_OtherReturnType() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -454,11 +452,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_OtherAccessor() {
+    [Test]
+    public async ValueTask Indexer_OtherAccessor() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -486,11 +484,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_OtherParameters() {
+    [Test]
+    public async ValueTask Indexer_OtherParameters() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -518,7 +516,7 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
@@ -526,8 +524,8 @@ public static class InheritanceTests {
 
     #region EventField
 
-    [Fact]
-    public static void EventField() {
+    [Test]
+    public async ValueTask EventField() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -553,11 +551,11 @@ public static class InheritanceTests {
             public partial interface ITest : MyCode.IBase {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventField_OtherType() {
+    [Test]
+    public async ValueTask EventField_OtherType() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -585,11 +583,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventField_OtherStatic() {
+    [Test]
+    public async ValueTask EventField_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -617,7 +615,7 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
@@ -625,8 +623,8 @@ public static class InheritanceTests {
 
     #region EventProperty
 
-    [Fact]
-    public static void EventProperty() {
+    [Test]
+    public async ValueTask EventProperty() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -652,11 +650,11 @@ public static class InheritanceTests {
             public partial interface ITest : MyCode.IBase {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventProperty_OtherType() {
+    [Test]
+    public async ValueTask EventProperty_OtherType() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -684,11 +682,11 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventProperty_OtherStatic() {
+    [Test]
+    public async ValueTask EventProperty_OtherStatic() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -716,7 +714,7 @@ public static class InheritanceTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion

@@ -1,14 +1,12 @@
-﻿using Xunit;
+﻿namespace AutoInterface.Tests;
 
-namespace AutoInterface.Tests;
-
-public static class AttributeTests {
-    [Theory]
-    [InlineData("Example")]
-    [InlineData("asdf")]
-    [InlineData("TestInterface")]
-    [InlineData("WUWU")]
-    public static void Name(string name) {
+public sealed class AttributeTests {
+    [Test]
+    [Arguments("Example")]
+    [Arguments("asdf")]
+    [Arguments("TestInterface")]
+    [Arguments("WUWU")]
+    public async ValueTask Name(string name) {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -28,15 +26,15 @@ public static class AttributeTests {
             public partial interface {{name}} {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Theory]
-    [InlineData("internal")]
-    [InlineData("public partial")]
-    [InlineData("internal partial")]
-    public static void Modifier(string modifier) {
+    [Test]
+    [Arguments("internal")]
+    [Arguments("public partial")]
+    [Arguments("internal partial")]
+    public async ValueTask Modifier(string modifier) {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -56,15 +54,15 @@ public static class AttributeTests {
             {{modifier}} interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Theory]
-    [InlineData("MySpace")]
-    [InlineData("System.Generics")]
-    [InlineData("BLAHBLAH.BLAH")]
-    public static void Namespace(string namspace) {
+    [Test]
+    [Arguments("MySpace")]
+    [Arguments("System.Generics")]
+    [Arguments("BLAHBLAH.BLAH")]
+    public async ValueTask Namespace(string namspace) {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -84,11 +82,11 @@ public static class AttributeTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Namespace_Empty() {
+    [Test]
+    public async ValueTask Namespace_Empty() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -106,21 +104,21 @@ public static class AttributeTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Theory]
-    [InlineData("[]", "")]
-    [InlineData("[typeof(ICore)]", ": MyCode.ICore ")]
-    [InlineData("[typeof(A), typeof(B), typeof(C)]", ": MyCode.A, MyCode.B, MyCode.C ")]
-    [InlineData("new[] { }", "")]
-    [InlineData("new[] { typeof(ICore) }", ": MyCode.ICore ")]
-    [InlineData("new[] { typeof(A), typeof(B), typeof(C) }", ": MyCode.A, MyCode.B, MyCode.C ")]
-    //[InlineData("new Type[] { }", "")]
-    //[InlineData("new Type[] { typeof(ICore) }", ": MyCode.ICore ")]
-    //[InlineData("new Type[] { typeof(A), typeof(B), typeof(C) }", ": MyCode.A, MyCode.B, MyCode.C ")]
-    public static void Inheritance(string inheritance, string result) {
+    [Test]
+    [Arguments("[]", "")]
+    [Arguments("[typeof(ICore)]", ": MyCode.ICore ")]
+    [Arguments("[typeof(A), typeof(B), typeof(C)]", ": MyCode.A, MyCode.B, MyCode.C ")]
+    [Arguments("new[] { }", "")]
+    [Arguments("new[] { typeof(ICore) }", ": MyCode.ICore ")]
+    [Arguments("new[] { typeof(A), typeof(B), typeof(C) }", ": MyCode.A, MyCode.B, MyCode.C ")]
+    //[Arguments("new Type[] { }", "")]
+    //[Arguments("new Type[] { typeof(ICore) }", ": MyCode.ICore ")]
+    //[Arguments("new Type[] { typeof(A), typeof(B), typeof(C) }", ": MyCode.A, MyCode.B, MyCode.C ")]
+    public async ValueTask Inheritance(string inheritance, string result) {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -146,12 +144,12 @@ public static class AttributeTests {
             public partial interface ITest {{result}}{}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Fact]
-    public static void Nested() {
+    [Test]
+    public async ValueTask Nested() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -173,11 +171,11 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Nested_Triple() {
+    [Test]
+    public async ValueTask Nested_Triple() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -203,11 +201,11 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void NestedWithMembers() {
+    [Test]
+    public async ValueTask NestedWithMembers() {
         string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -237,12 +235,12 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
-    [Fact]
-    public static void StaticMembers() {
+    [Test]
+    public async ValueTask StaticMembers() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -266,13 +264,13 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
 
-    [Fact]
-    public static void AutoInterfaceVisibilityPublic() {
+    [Test]
+    public async ValueTask AutoInterfaceVisibilityPublic() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -324,11 +322,11 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void AutoInterfaceVisibilityInternal() {
+    [Test]
+    public async ValueTask AutoInterfaceVisibilityInternal() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -380,11 +378,11 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void AutoInterfaceVisibilityProtected() {
+    [Test]
+    public async ValueTask AutoInterfaceVisibilityProtected() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -436,11 +434,11 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void AutoInterfaceVisibilityProtectedInternal() {
+    [Test]
+    public async ValueTask AutoInterfaceVisibilityProtectedInternal() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -492,11 +490,11 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void AutoInterfaceVisibilityPrivateProtected() {
+    [Test]
+    public async ValueTask AutoInterfaceVisibilityPrivateProtected() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -548,11 +546,11 @@ public static class AttributeTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void IgnoreAutoInterface() {
+    [Test]
+    public async ValueTask IgnoreAutoInterface() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -589,6 +587,6 @@ public static class AttributeTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 }

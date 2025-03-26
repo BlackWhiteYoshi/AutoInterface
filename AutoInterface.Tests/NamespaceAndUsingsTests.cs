@@ -1,10 +1,8 @@
-﻿using Xunit;
+﻿namespace AutoInterface.Tests;
 
-namespace AutoInterface.Tests;
-
-public static class NamespaceAndUsingsTests {
-    [Fact]
-    public static void NestedNamespace() {
+public sealed class NamespaceAndUsingsTests {
+    [Test]
+    public async ValueTask NestedNamespace() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -30,11 +28,11 @@ public static class NamespaceAndUsingsTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void NestedUsings() {
+    [Test]
+    public async ValueTask NestedUsings() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -70,6 +68,6 @@ public static class NamespaceAndUsingsTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 }

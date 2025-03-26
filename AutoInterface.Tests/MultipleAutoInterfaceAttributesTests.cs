@@ -1,10 +1,8 @@
-﻿using Xunit;
+﻿namespace AutoInterface.Tests;
 
-namespace AutoInterface.Tests;
-
-public static class MultipleAutoInterfaceAttributesTests {
-    [Fact]
-    public static void TwoAutoInterfaceAttributes() {
+public sealed class MultipleAutoInterfaceAttributesTests {
+    [Test]
+    public async ValueTask TwoAutoInterfaceAttributes() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -31,7 +29,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[0]);
+            await Assert.That(sourceText[0]).IsEqualTo(expected);
         }
         {
             string expected = $$"""
@@ -44,12 +42,12 @@ public static class MultipleAutoInterfaceAttributesTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[1]);
+            await Assert.That(sourceText[1]).IsEqualTo(expected);
         }
     }
 
-    [Fact]
-    public static void TwoAutoInterfaceAttributes_Summary() {
+    [Test]
+    public async ValueTask TwoAutoInterfaceAttributes_Summary() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -67,7 +65,7 @@ public static class MultipleAutoInterfaceAttributesTests {
 
             """;
         string[] sourceText = input.GenerateSourceText(out _, out _);
-        sourceText = sourceText.Skip(sourceText.Length - 2).Take(2).ToArray();
+        sourceText = [.. sourceText.Skip(sourceText.Length - 2).Take(2)];
 
         {
             string expected = $$"""
@@ -83,7 +81,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[0]);
+            await Assert.That(sourceText[0]).IsEqualTo(expected);
         }
         {
             string expected = $$"""
@@ -99,12 +97,12 @@ public static class MultipleAutoInterfaceAttributesTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[1]);
+            await Assert.That(sourceText[1]).IsEqualTo(expected);
         }
     }
 
-    [Fact]
-    public static void TwoAutoInterfaceAttributes_Explicit() {
+    [Test]
+    public async ValueTask TwoAutoInterfaceAttributes_Explicit() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -120,7 +118,7 @@ public static class MultipleAutoInterfaceAttributesTests {
 
             """;
         string[] sourceText = input.GenerateSourceText(out _, out _);
-        sourceText = sourceText.Skip(sourceText.Length - 2).Take(2).ToArray();
+        sourceText = [.. sourceText.Skip(sourceText.Length - 2).Take(2)];
 
         {
             string expected = $$"""
@@ -133,7 +131,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[0]);
+            await Assert.That(sourceText[0]).IsEqualTo(expected);
         }
         {
             string expected = $$"""
@@ -146,7 +144,7 @@ public static class MultipleAutoInterfaceAttributesTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[1]);
+            await Assert.That(sourceText[1]).IsEqualTo(expected);
         }
     }
 }

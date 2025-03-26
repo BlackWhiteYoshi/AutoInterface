@@ -1,10 +1,8 @@
-﻿using Xunit;
+﻿namespace AutoInterface.Tests;
 
-namespace AutoInterface.Tests;
-
-public static class MemberTests {
-    [Fact]
-    public static void NoMembers() {
+public sealed class MemberTests {
+    [Test]
+    public async ValueTask NoMembers() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -24,11 +22,11 @@ public static class MemberTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void NoInterfacing() {
+    [Test]
+    public async ValueTask NoInterfacing() {
         const string input = $$"""
             using AutoInterfaceAttributes;
 
@@ -60,14 +58,14 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
 
     #region Method
 
-    [Fact]
-    public static void Method() {
+    [Test]
+    public async ValueTask Method() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -91,11 +89,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_Generic() {
+    [Test]
+    public async ValueTask Method_Generic() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -119,11 +117,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_Parameter() {
+    [Test]
+    public async ValueTask Method_Parameter() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -147,11 +145,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_Summary() {
+    [Test]
+    public async ValueTask Method_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -181,11 +179,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_SummaryWithAttributes() {
+    [Test]
+    public async ValueTask Method_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -219,11 +217,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_Async() {
+    [Test]
+    public async ValueTask Method_Async() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -247,11 +245,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_FullName() {
+    [Test]
+    public async ValueTask Method_FullName() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -275,11 +273,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_Explicit() {
+    [Test]
+    public async ValueTask Method_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -303,11 +301,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_IgnoreAutoInterfaceAttribute() {
+    [Test]
+    public async ValueTask Method_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -330,11 +328,11 @@ public static class MemberTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Method_Everything() {
+    [Test]
+    public async ValueTask Method_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -379,7 +377,7 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
@@ -387,8 +385,8 @@ public static class MemberTests {
 
     #region Property
 
-    [Fact]
-    public static void Property() {
+    [Test]
+    public async ValueTask Property() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -412,11 +410,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_Summary() {
+    [Test]
+    public async ValueTask Property_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -446,11 +444,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_SummaryWithAttributes() {
+    [Test]
+    public async ValueTask Property_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -484,11 +482,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_Get() {
+    [Test]
+    public async ValueTask Property_Get() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -512,11 +510,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_Set() {
+    [Test]
+    public async ValueTask Property_Set() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -540,11 +538,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_GetSet() {
+    [Test]
+    public async ValueTask Property_GetSet() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -568,11 +566,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_Init() {
+    [Test]
+    public async ValueTask Property_Init() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -596,11 +594,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_GetInit() {
+    [Test]
+    public async ValueTask Property_GetInit() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -624,11 +622,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_FullName() {
+    [Test]
+    public async ValueTask Property_FullName() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -652,11 +650,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_Explicit() {
+    [Test]
+    public async ValueTask Property_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -680,11 +678,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_IgnoreAutoInterfaceAttribute() {
+    [Test]
+    public async ValueTask Property_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -707,11 +705,11 @@ public static class MemberTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Property_Everything() {
+    [Test]
+    public async ValueTask Property_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -772,7 +770,7 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
@@ -780,8 +778,8 @@ public static class MemberTests {
 
     #region Indexer
 
-    [Fact]
-    public static void Indexer() {
+    [Test]
+    public async ValueTask Indexer() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -807,12 +805,12 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
 
     }
 
-    [Fact]
-    public static void Indexer_Summary() {
+    [Test]
+    public async ValueTask Indexer_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -844,11 +842,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_SummaryWithAttributes() {
+    [Test]
+    public async ValueTask Indexer_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -884,11 +882,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_Get() {
+    [Test]
+    public async ValueTask Indexer_Get() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -914,12 +912,12 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
 
     }
 
-    [Fact]
-    public static void Indexer_Set() {
+    [Test]
+    public async ValueTask Indexer_Set() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -945,11 +943,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_GetSet() {
+    [Test]
+    public async ValueTask Indexer_GetSet() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -976,11 +974,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_Explicit() {
+    [Test]
+    public async ValueTask Indexer_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1007,11 +1005,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_IgnoreAutoInterfaceAttribute() {
+    [Test]
+    public async ValueTask Indexer_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1037,11 +1035,11 @@ public static class MemberTests {
             public partial interface INoTest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void Indexer_Everything() {
+    [Test]
+    public async ValueTask Indexer_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1091,7 +1089,7 @@ public static class MemberTests {
 
             """;
         string[] sourceText = input.GenerateSourceText(out _, out _);
-        sourceText = sourceText.Skip(sourceText.Length - 5).Take(5).ToArray();
+        sourceText = [.. sourceText.Skip(sourceText.Length - 5).Take(5)];
 
         {
             const string expected = $$"""
@@ -1107,7 +1105,7 @@ public static class MemberTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[0]);
+            await Assert.That(sourceText[0]).IsEqualTo(expected);
         }
         {
             const string expected = $$"""
@@ -1120,7 +1118,7 @@ public static class MemberTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[1]);
+            await Assert.That(sourceText[1]).IsEqualTo(expected);
         }
         {
             const string expected = $$"""
@@ -1133,7 +1131,7 @@ public static class MemberTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[2]);
+            await Assert.That(sourceText[2]).IsEqualTo(expected);
         }
         {
             const string expected = $$"""
@@ -1146,7 +1144,7 @@ public static class MemberTests {
                 }
 
                 """;
-            Assert.Equal(expected, sourceText[3]);
+            await Assert.That(sourceText[3]).IsEqualTo(expected);
         }
         {
             const string expected = $$"""
@@ -1157,7 +1155,7 @@ public static class MemberTests {
                 public partial interface INoTest {}
 
                 """;
-            Assert.Equal(expected, sourceText[4]);
+            await Assert.That(sourceText[4]).IsEqualTo(expected);
         }
     }
 
@@ -1166,8 +1164,8 @@ public static class MemberTests {
 
     #region EventField
 
-    [Fact]
-    public static void EventField() {
+    [Test]
+    public async ValueTask EventField() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1191,11 +1189,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventField_Summary() {
+    [Test]
+    public async ValueTask EventField_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1225,11 +1223,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventField_SummaryWithAttributes() {
+    [Test]
+    public async ValueTask EventField_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1263,11 +1261,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventField_IgnoreAutoInterfaceAttribute() {
+    [Test]
+    public async ValueTask EventField_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1290,11 +1288,11 @@ public static class MemberTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventField_Everything() {
+    [Test]
+    public async ValueTask EventField_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1327,7 +1325,7 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
@@ -1335,8 +1333,8 @@ public static class MemberTests {
 
     #region EventProperty
 
-    [Fact]
-    public static void EventProperty() {
+    [Test]
+    public async ValueTask EventProperty() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1360,11 +1358,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventProperty_Summary() {
+    [Test]
+    public async ValueTask EventProperty_Summary() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1394,11 +1392,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventProperty_SummaryWithAttributes() {
+    [Test]
+    public async ValueTask EventProperty_SummaryWithAttributes() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1432,11 +1430,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventProperty_Explicit() {
+    [Test]
+    public async ValueTask EventProperty_Explicit() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1460,11 +1458,11 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventProperty_IgnoreAutoInterfaceAttribute() {
+    [Test]
+    public async ValueTask EventProperty_IgnoreAutoInterfaceAttribute() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1487,11 +1485,11 @@ public static class MemberTests {
             public partial interface ITest {}
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
-    [Fact]
-    public static void EventProperty_Everything() {
+    [Test]
+    public async ValueTask EventProperty_Everything() {
         const string input = """
             using AutoInterfaceAttributes;
 
@@ -1528,7 +1526,7 @@ public static class MemberTests {
             }
 
             """;
-        Assert.Equal(expected, sourceText);
+        await Assert.That(sourceText).IsEqualTo(expected);
     }
 
     #endregion
