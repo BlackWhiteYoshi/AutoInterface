@@ -1,4 +1,6 @@
-﻿namespace AutoInterface;
+﻿using AssemblyVersionInfo;
+
+namespace AutoInterface;
 
 public static partial class Attributes {
     public const string AutoInterfaceVisibilityInternalAttribute = $$"""
@@ -17,7 +19,7 @@ public static partial class Attributes {
         /// Adds a "internal" access modifier to the interface member.
         /// </summary>
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Event)]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{NAME}}", "{{VERSION}}")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{Assembly.NAME}}", "{{Assembly.VERSION_MAJOR_MINOR_BUILD}}")]
         internal sealed class AutoInterfaceVisibilityInternal : Attribute { }
 
         #endif

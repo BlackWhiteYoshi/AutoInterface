@@ -1,4 +1,6 @@
-﻿namespace AutoInterface;
+﻿using AssemblyVersionInfo;
+
+namespace AutoInterface;
 
 public static partial class Attributes {
     public const string AutoInterfaceAttribute = $$"""
@@ -17,7 +19,7 @@ public static partial class Attributes {
         /// Generates an interface for the decorated class/struct.
         /// </summary>
         [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true)]
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{NAME}}", "{{VERSION}}")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("{{Assembly.NAME}}", "{{Assembly.VERSION_MAJOR_MINOR_BUILD}}")]
         internal sealed class AutoInterfaceAttribute : Attribute {
             /// <summary>
             /// <para>The name of the generated interface.</para>
