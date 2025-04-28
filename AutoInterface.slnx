@@ -1,0 +1,4 @@
+﻿<Solution>
+  <Project Path="AutoInterface/AutoInterface.csproj" />
+  <Project Path="AutoInterface.Tests/AutoInterface.Tests.csproj" />
+</Solution>
