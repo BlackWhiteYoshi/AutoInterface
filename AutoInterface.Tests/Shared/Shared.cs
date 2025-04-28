@@ -22,7 +22,7 @@ public static class Shared {
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         GeneratorRunResult generatorResult = runResult.Results[0];
-        return generatorResult.GeneratedSources.Select((GeneratedSourceResult generatedSource) => generatedSource.SourceText.ToString()).ToArray();
+        return [.. generatorResult.GeneratedSources.Select((GeneratedSourceResult generatedSource) => generatedSource.SourceText.ToString())];
 
 
         static CSharpCompilation CreateCompilation(string source) {
