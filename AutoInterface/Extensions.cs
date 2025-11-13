@@ -146,12 +146,14 @@ internal static class Extensions {
 
         return builder;
     }
-    /// <summary>
-    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.INamespace)"/> to <see cref="AppendNamespace"/>.
-    /// </summary>
-    /// <param name="service"></param>
-    /// <returns></returns>
-    public static StringBuilderInterpolationHandler.INamespace AsNamespace(this INamespaceSymbol namespaceSymbol) => Unsafe.As<StringBuilderInterpolationHandler.INamespace>(namespaceSymbol);
+    extension(INamespaceSymbol namespaceSymbol) {
+        /// <summary>
+        /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.INamespace)"/> to <see cref="AppendNamespace"/>.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public StringBuilderInterpolationHandler.INamespace AsNamespace => Unsafe.As<StringBuilderInterpolationHandler.INamespace>(namespaceSymbol);
+    }
 
     /// <summary>
     /// <para>
@@ -171,12 +173,14 @@ internal static class Extensions {
 
         return builder;
     }
-    /// <summary>
-    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IContainingTypes)"/> to <see cref="AppendContainingTypes"/>.
-    /// </summary>
-    /// <param name="service"></param>
-    /// <returns></returns>
-    public static StringBuilderInterpolationHandler.IContainingTypes AsContainingTypes(this INamedTypeSymbol? containingType) => Unsafe.As<StringBuilderInterpolationHandler.IContainingTypes>(containingType);
+    extension(INamedTypeSymbol? containingType) {
+        /// <summary>
+        /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IContainingTypes)"/> to <see cref="AppendContainingTypes"/>.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public StringBuilderInterpolationHandler.IContainingTypes AsContainingTypes() => Unsafe.As<StringBuilderInterpolationHandler.IContainingTypes>(containingType);
+    }
 
     /// <summary>
     /// <para>
@@ -200,12 +204,14 @@ internal static class Extensions {
 
         return builder;
     }
-    /// <summary>
-    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IParameterList)"/> to <see cref="AppendParameterList"/>.
-    /// </summary>
-    /// <param name="service"></param>
-    /// <returns></returns>
-    public static StringBuilderInterpolationHandler.IParameterList AsParameterList(this INamedTypeSymbol typeSymbol) => Unsafe.As<StringBuilderInterpolationHandler.IParameterList>(typeSymbol);
+    extension(INamedTypeSymbol typeSymbol) {
+        /// <summary>
+        /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IParameterList)"/> to <see cref="AppendParameterList"/>.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public StringBuilderInterpolationHandler.IParameterList AsParameterList => Unsafe.As<StringBuilderInterpolationHandler.IParameterList>(typeSymbol);
+    }
 
     /// <summary>
     /// <para>Appends a access modifier when the corresponding attribute is present:</para>
@@ -233,12 +239,14 @@ internal static class Extensions {
 
         return builder;
     }
-    /// <summary>
-    /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IAccessModifier)"/> to <see cref="AppendAccessModifier"/>.
-    /// </summary>
-    /// <param name="service"></param>
-    /// <returns></returns>
-    public static StringBuilderInterpolationHandler.IAccessModifier AsAccessModifier(this MemberDeclarationSyntax member) => Unsafe.As<StringBuilderInterpolationHandler.IAccessModifier>(member);
+    extension(MemberDeclarationSyntax member) {
+        /// <summary>
+        /// Creates a type to map method <see cref="StringBuilderInterpolationHandler.AppendFormatted(StringBuilderInterpolationHandler.IAccessModifier)"/> to <see cref="AppendAccessModifier"/>.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public StringBuilderInterpolationHandler.IAccessModifier AsAccessModifier => Unsafe.As<StringBuilderInterpolationHandler.IAccessModifier>(member);
+    }
 
 
     /// <summary>

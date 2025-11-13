@@ -120,7 +120,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                 if (namespaceSymbol.Name == string.Empty)
                     break; // global namespace -> append nothing
 
-                builder.AppendInterpolation($"namespace {namespaceSymbol.ContainingNamespace.AsNamespace()}{namespaceSymbol.Name};\n\n");
+                builder.AppendInterpolation($"namespace {namespaceSymbol.ContainingNamespace.AsNamespace}{namespaceSymbol.Name};\n\n");
                 break;
             default:
                 builder.AppendInterpolation($"namespace {attribute.namspace};\n\n");
@@ -270,7 +270,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.AppendInterpolation($"{indent}{methodDeclarationSyntax.AttributeLists}\n");
 
                     // actual declaration
-                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}{methodDeclarationSyntax.ReturnType} {methodDeclarationSyntax.Identifier.ValueText}{methodDeclarationSyntax.TypeParameterList}{methodDeclarationSyntax.ParameterList}");
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{modifiers}{methodDeclarationSyntax.ReturnType} {methodDeclarationSyntax.Identifier.ValueText}{methodDeclarationSyntax.TypeParameterList}{methodDeclarationSyntax.ParameterList}");
                     if (methodDeclarationSyntax.ConstraintClauses.ToString() is string { Length: > 0 } constraintClauses)
                         builder.AppendInterpolation($" {constraintClauses}");
                     builder.Append(";\n\n");
@@ -358,7 +358,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.AppendInterpolation($"{indent}{propertyDeclarationSyntax.AttributeLists}\n");
 
                     // actual declaration
-                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}{propertyDeclarationSyntax.Type} {propertyDeclarationSyntax.Identifier.ValueText} {{ ");
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{modifiers}{propertyDeclarationSyntax.Type} {propertyDeclarationSyntax.Identifier.ValueText} {{ ");
                     if (propertyDeclarationSyntax.AccessorList is not null) {
                         foreach (AccessorDeclarationSyntax accessor in propertyDeclarationSyntax.AccessorList.Accessors)
                             if (accessor.Modifiers.Count == 0) // check if public
@@ -436,7 +436,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.AppendInterpolation($"{indent}{indexerDeclarationSyntax.AttributeLists}\n");
 
                     // actual declaration
-                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{indexerDeclarationSyntax.Type} this{indexerDeclarationSyntax.ParameterList} {{ ");
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{indexerDeclarationSyntax.Type} this{indexerDeclarationSyntax.ParameterList} {{ ");
                     if (indexerDeclarationSyntax.AccessorList != null) {
                         foreach (AccessorDeclarationSyntax accessor in indexerDeclarationSyntax.AccessorList.Accessors)
                             if (accessor.Modifiers.Count == 0) // check if public
@@ -506,7 +506,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.AppendInterpolation($"{indent}{eventFieldDeclarationSyntax.AttributeLists}\n");
 
                     // actual declaration
-                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}event {eventFieldDeclarationSyntax.Declaration.Type} {eventFieldDeclarationSyntax.Declaration.Variables};\n\n");
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{modifiers}event {eventFieldDeclarationSyntax.Declaration.Type} {eventFieldDeclarationSyntax.Declaration.Variables};\n\n");
 
                     _switchBreak:
                     break;
@@ -583,7 +583,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.AppendInterpolation($"{indent}{eventDeclarationSyntax.AttributeLists}\n");
 
                     // actual declaration
-                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier()}{modifiers}event {eventDeclarationSyntax.Type} {eventDeclarationSyntax.Identifier};\n\n");
+                    builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{modifiers}event {eventDeclarationSyntax.Type} {eventDeclarationSyntax.Identifier};\n\n");
 
                     _switchBreak:
                     break;
