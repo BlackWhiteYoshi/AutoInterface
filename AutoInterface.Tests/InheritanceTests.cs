@@ -1,4 +1,4 @@
-﻿namespace AutoInterface.Tests;
+namespace AutoInterface.Tests;
 
 public sealed class InheritanceTests {
     #region Method

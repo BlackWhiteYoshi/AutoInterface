@@ -1,4 +1,4 @@
-﻿using AssemblyVersionInfo;
+using AssemblyVersionInfo;
 
 namespace AutoInterface;
 
