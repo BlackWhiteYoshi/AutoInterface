@@ -81,6 +81,34 @@ public sealed class OtherTypesTests {
         await Assert.That(sourceText).IsEqualTo(expected);
     }
 
+    [Test]
+    public async ValueTask GenericWhereClause() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+
+            namespace MyCode;
+
+            [AutoInterface]
+            public class Test<T> where T : System.IDisposable {
+                public T Test => default;
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest<T> where T : System.IDisposable {
+                T Test { get; }
+            }
+
+            """;
+        await Assert.That(sourceText).IsEqualTo(expected);
+    }
+
 
     [Test]
     public async ValueTask Struct() {

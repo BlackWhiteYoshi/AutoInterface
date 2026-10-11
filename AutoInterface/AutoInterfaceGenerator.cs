@@ -163,6 +163,9 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     builder.AppendInterpolation($", {attribute.inheritance[i]}");
             }
 
+            if (targetType.ConstraintClauses.Count > 0)
+                builder.AppendInterpolation($" {targetType.ConstraintClauses.ToString()}");
+
             builder.Append(" {\n");
             indent.IncreaseLevel();
         }
@@ -271,8 +274,8 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
 
                     // actual declaration
                     builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{modifiers}{methodDeclarationSyntax.ReturnType} {methodDeclarationSyntax.Identifier.ValueText}{methodDeclarationSyntax.TypeParameterList}{methodDeclarationSyntax.ParameterList}");
-                    if (methodDeclarationSyntax.ConstraintClauses.ToString() is string { Length: > 0 } constraintClauses)
-                        builder.AppendInterpolation($" {constraintClauses}");
+                    if (methodDeclarationSyntax.ConstraintClauses.Count > 0)
+                        builder.AppendInterpolation($" {methodDeclarationSyntax.ConstraintClauses.ToString()}");
                     builder.Append(";\n\n");
 
                     _switchBreak:
