@@ -10,7 +10,13 @@ public sealed class OtherTypesTests {
 
             [AutoInterface]
             public class Test<T> {
+                public T PTest => default;
+
                 public T? MTest() => default;
+
+                public T this[int i] => default;
+
+                public event Action ATest { add { } remove { } }
             }
 
             """;
@@ -22,7 +28,53 @@ public sealed class OtherTypesTests {
             namespace MyCode;
 
             public partial interface ITest<T> {
+                T PTest { get; }
+
                 T? MTest();
+
+                T this[int i] { get; }
+
+                event Action ATest;
+            }
+
+            """;
+        await Assert.That(sourceText).IsEqualTo(expected);
+    }
+
+    [Test]
+    public async ValueTask GenericExplicit() {
+        const string input = $$"""
+            using AutoInterfaceAttributes;
+
+            namespace MyCode;
+
+            [AutoInterface]
+            public class Test<T> {
+                int ITest<T>.PTest => -1;
+
+                T? ITest<T>.MTest() => default;
+
+                T ITest<T>.this[int i] => default;
+
+                event Action ITest<T>.ATest { add { } remove { } }
+            }
+
+            """;
+        string sourceText = input.GenerateSourceText(out _, out _)[^1];
+
+        string expected = $$"""
+            {{Shared.GENERATED_SOURCE_HEAD}}
+
+            namespace MyCode;
+
+            public partial interface ITest<T> {
+                int PTest { get; }
+
+                T? MTest();
+
+                T this[int i] { get; }
+
+                event Action ATest;
             }
 
             """;

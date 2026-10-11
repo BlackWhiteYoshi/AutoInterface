@@ -212,19 +212,19 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     }
                     else {
                         // explicit interface specifier
-                        if (methodDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
+                        if (methodDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not SimpleNameSyntax nameSyntax)
                             break;
 
                         if (attribute.name is null) {
-                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                            if (nameSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
                                 break;
-                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                            if (nameSyntax.Identifier.ValueText[0] != 'I')
                                 break;
-                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                            if (!nameSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
                                 break;
                         }
                         else {
-                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                            if (nameSyntax.Identifier.ValueText != attribute.name)
                                 break;
                         }
                     }
@@ -313,19 +313,20 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         }
                     }
                     else {
-                        if (propertyDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
+                        // explicit interface specifier
+                        if (propertyDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not SimpleNameSyntax nameSyntax)
                             break;
 
                         if (attribute.name is null) {
-                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                            if (nameSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
                                 break;
-                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                            if (nameSyntax.Identifier.ValueText[0] != 'I')
                                 break;
-                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                            if (!nameSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
                                 break;
                         }
                         else {
-                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                            if (nameSyntax.Identifier.ValueText != attribute.name)
                                 break;
                         }
                     }
@@ -399,19 +400,19 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         }
                     }
                     else {
-                        if (indexerDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
+                        if (indexerDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not SimpleNameSyntax nameSyntax)
                             break;
 
                         if (attribute.name is null) {
-                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                            if (nameSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
                                 break;
-                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                            if (nameSyntax.Identifier.ValueText[0] != 'I')
                                 break;
-                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                            if (!nameSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
                                 break;
                         }
                         else {
-                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                            if (nameSyntax.Identifier.ValueText != attribute.name)
                                 break;
                         }
                     }
@@ -538,19 +539,19 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         }
                     }
                     else {
-                        if (eventDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not IdentifierNameSyntax identifierSyntax)
+                        if (eventDeclarationSyntax.ExplicitInterfaceSpecifier?.Name is not SimpleNameSyntax nameSyntax)
                             break;
 
                         if (attribute.name is null) {
-                            if (identifierSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
+                            if (nameSyntax.Identifier.ValueText.Length != targetSymbol.Name.Length + 1)
                                 break;
-                            if (identifierSyntax.Identifier.ValueText[0] != 'I')
+                            if (nameSyntax.Identifier.ValueText[0] != 'I')
                                 break;
-                            if (!identifierSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
+                            if (!nameSyntax.Identifier.ValueText.AsSpan(1).SequenceEqual(targetSymbol.Name.AsSpan()))
                                 break;
                         }
                         else {
-                            if (identifierSyntax.Identifier.ValueText != attribute.name)
+                            if (nameSyntax.Identifier.ValueText != attribute.name)
                                 break;
                         }
                     }
