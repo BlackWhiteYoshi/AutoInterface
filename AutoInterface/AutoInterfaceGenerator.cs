@@ -170,7 +170,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
             indent.IncreaseLevel();
         }
 
-        foreach (MemberDeclarationSyntax member in targetType.Members) {
+        member_loop: foreach (MemberDeclarationSyntax member in targetType.Members) {
             if (member.GetAttribute("IgnoreAutoInterface") != null)
                 continue;
 
@@ -204,7 +204,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                                                 if (methodSymbol.TypeParameters.Length == targetMethod.TypeParameters.Length)
                                                     if (methodSymbol.Parameters.SequenceEqual(targetMethod.Parameters, (IParameterSymbol a, IParameterSymbol b) => SymbolEqualityComparer.Default.Equals(a.Type, b.Type)))
                                                         if (methodSymbol.IsStatic == targetMethod.IsStatic)
-                                                            goto _switchBreak;
+                                                            continue member_loop;
                                 }
 
                                 if (!allInterfaces.MoveNext())
@@ -237,13 +237,14 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         if (methodDeclarationSyntax.Identifier.ValueText == "Deconstruct")
                             if (!methodDeclarationSyntax.Modifiers.Contains("static"))
                                 if (methodDeclarationSyntax.ParameterList.Parameters.Count == recordParameterList.Count) {
-                                    for (int i = 0; i < recordParameterList.Count; i++)
-                                        if (methodDeclarationSyntax.ParameterList.Parameters[i].Modifiers is not [SyntaxToken { ValueText: "out" }])
-                                            if (methodDeclarationSyntax.ParameterList.Parameters[i].Type != recordParameterList[i].Type)
-                                                goto DeconstructChecked;
                                     recordDeconstructOverwrittenFlag = true;
+                                    loop: for (int i = 0; i < recordParameterList.Count; i++)
+                                        if (methodDeclarationSyntax.ParameterList.Parameters[i].Modifiers is not [SyntaxToken { ValueText: "out" }]
+                                            || methodDeclarationSyntax.ParameterList.Parameters[i].Type?.IsEquivalentTo(recordParameterList[i].Type) == false) {
+                                                recordDeconstructOverwrittenFlag = false;
+                                                break loop;
+                                            }
                                 }
-                    DeconstructChecked:
 
                     string modifiers;
                     if (!methodDeclarationSyntax.Modifiers.Contains("static"))
@@ -278,7 +279,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.AppendInterpolation($" {methodDeclarationSyntax.ConstraintClauses.ToString()}");
                     builder.Append(";\n\n");
 
-                    _switchBreak:
                     break;
                 }
 
@@ -306,7 +306,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                                             if (SymbolEqualityComparer.Default.Equals(propertySymbol.Type, targetProperty.Type))
                                                 if (propertySymbol.GetMethod is null == targetProperty.GetMethod is null && propertySymbol.SetMethod is null == targetProperty.SetMethod is null)
                                                     if (propertySymbol.IsStatic == targetProperty.IsStatic)
-                                                        goto _switchBreak;
+                                                        continue member_loop;
                                 }
 
                                 if (!allInterfaces.MoveNext())
@@ -372,7 +372,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.Append("get; ");  // body-expression syntax: "=> "
                     builder.Append("}\n\n");
 
-                    _switchBreak:
                     break;
                 }
 
@@ -393,7 +392,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                                             if (SymbolEqualityComparer.Default.Equals(propertySymbol.Type, targetIndexer.Type))
                                                 if (propertySymbol.Parameters.SequenceEqual(targetIndexer.Parameters, (IParameterSymbol a, IParameterSymbol b) => SymbolEqualityComparer.Default.Equals(a.Type, b.Type)))
                                                     if (propertySymbol.GetMethod is null == targetIndexer.GetMethod is null && propertySymbol.SetMethod is null == targetIndexer.SetMethod is null)
-                                                        goto _switchBreak;
+                                                        continue member_loop;
                                 }
 
                                 if (!allInterfaces.MoveNext())
@@ -450,7 +449,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                         builder.Append("get; ");  // body-expression syntax: "=> "
                     builder.Append("}\n\n");
 
-                    _switchBreak:
                     break;
                 }
 
@@ -470,7 +468,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                                             if (target is IEventSymbol targetEvent)
                                                 if (SymbolEqualityComparer.Default.Equals(eventSymbol.Type, targetEvent.Type))
                                                     if (eventSymbol.IsStatic == targetEvent.IsStatic)
-                                                        goto _switchBreak;
+                                                        continue member_loop;
                                     }
 
                                 if (!allInterfaces.MoveNext())
@@ -512,7 +510,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     // actual declaration
                     builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{modifiers}event {eventFieldDeclarationSyntax.Declaration.Type} {eventFieldDeclarationSyntax.Declaration.Variables};\n\n");
 
-                    _switchBreak:
                     break;
                 }
 
@@ -532,7 +529,7 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                                         if (target is IEventSymbol targetEvent)
                                             if (SymbolEqualityComparer.Default.Equals(eventSymbol.Type, targetEvent.Type))
                                                 if (eventSymbol.IsStatic == targetEvent.IsStatic)
-                                                    goto _switchBreak;
+                                                    continue member_loop;
                                 }
 
                                 if (!allInterfaces.MoveNext())
@@ -589,7 +586,6 @@ public sealed partial class AutoInterfaceGenerator : IIncrementalGenerator {
                     // actual declaration
                     builder.AppendInterpolation($"{indent}{member.AsAccessModifier}{modifiers}event {eventDeclarationSyntax.Type} {eventDeclarationSyntax.Identifier};\n\n");
 
-                    _switchBreak:
                     break;
                 }
             }
